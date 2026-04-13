@@ -1,20 +1,16 @@
 import { useEffect } from 'react';
 
+// Update isLightTheme in local storage and ui accordingly
 export default function useUpdateTheme(isLightTheme: boolean) {
   useEffect(() => {
-    // Update ui & localstorage based on theme state boolean value
-    const updateTheme = () => {
-      const body = document.querySelector('body');
+    const body = document.body;
 
-      if (isLightTheme) {
-        localStorage.setItem('isLightTheme', 'true');
-        body?.classList.remove('dark');
-      } else {
-        localStorage.removeItem('isLightTheme');
-        body?.classList.add('dark');
-      }
-    };
+    localStorage.setItem('isLightTheme', String(isLightTheme));
 
-    updateTheme();
+    if (isLightTheme) {
+      body.classList.remove('dark');
+    } else {
+      body.classList.add('dark');
+    }
   }, [isLightTheme]);
 }
