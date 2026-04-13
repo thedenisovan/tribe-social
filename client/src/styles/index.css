@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,
