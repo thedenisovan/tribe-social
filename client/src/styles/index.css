@@ -1,5 +1,11 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-spicy: 'Spicy Rice', 'Roboto';
+  --font-bubblegum: 'Bubblegum Sans', 'Roboto';
+  --purple-1000: #101028;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* 1. Use a more-intuitive box-sizing model */
@@ -24,7 +30,7 @@ body {
   /* 5. Improve text rendering */
   -webkit-font-smoothing: antialiased;
   font-family:
-    Roboto,
+    'Roboto',
     system-ui,
     -apple-system,
     BlinkMacSystemFont,

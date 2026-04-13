@@ -10,21 +10,12 @@ export default function App() {
       false,
   );
 
-  // Hook to update theme ui and isLightTheme localstorage
-  // value based on isLightTheme state
+  // Update theme ui and isLightTheme localstorage value based on isLightTheme state
   useUpdateTheme(isLightTheme);
 
   return (
     <>
       <ThemeContext value={{ isLightTheme, setIsLightTheme }}>
-        <button
-          onClick={() => {
-            // updateLocalTheme(isLightTheme);
-            setIsLightTheme(!isLightTheme);
-          }}
-        >
-          click
-        </button>
         <Outlet />
       </ThemeContext>
     </>
