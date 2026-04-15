@@ -1,5 +1,3 @@
-import { Link } from 'react-router';
-
 export default function AuthSlider({
   isSignupPage,
   setIsSignupPage,
@@ -8,22 +6,20 @@ export default function AuthSlider({
   setIsSignupPage: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
-    <div className='relative dark:bg-purple-950/30  font-light text-center bg-neutral-100 p-1.5 rounded-2xl'>
+    <div className='relative shadow-md dark:bg-purple-950/30  font-light text-center bg-neutral-100 p-1.5 rounded-2xl'>
       <div className='grid items-center grid-cols-2'>
-        <Link
+        <button
           onClick={() => setIsSignupPage(false)}
           className='flex-1 dark:text-neutral-200'
-          to='/'
         >
           Sign In
-        </Link>
-        <Link
+        </button>
+        <button
           onClick={() => setIsSignupPage(true)}
           className='flex-1 dark:text-neutral-200'
-          to='/signup'
         >
           Sign Up
-        </Link>
+        </button>
       </div>
 
       <CurrentPage isSignupPage={isSignupPage} />

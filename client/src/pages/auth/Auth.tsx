@@ -1,11 +1,12 @@
 import Hero from './sections/Hero';
-import { Outlet } from 'react-router';
 import { useContext, useState } from 'react';
 import ThemeContext from '../../context/ThemeContext';
 import { DarkIcon, LightIcon } from '../../components/common/ThemeIcons';
 import ICONS from '../../constants/icons';
 import AuthSlider from './components/AuthSlider';
 import AuthForm from './components/AuthForm';
+import AuthFooter from './components/AuthFooter';
+import GreetingHeader from './components/GreetingHeader';
 
 export default function Auth() {
   const themeContext = useContext(ThemeContext);
@@ -14,9 +15,9 @@ export default function Auth() {
   return (
     <>
       <title>Tribe Social | Homepage</title>
-      <main className='flex min-w-screen min-h-screen'>
+      <section className='flex overflow-hidden min-w-screen min-h-screen'>
         <Hero />
-        <section className='flex-1 flex-col items-center! p-6 transition-colors bg-neutral-50 dark:text-white dark:bg-(--purple-1000)'>
+        <aside className='flex-1 max-w-185 py-6 px-6 lg:px-20 transition-colors bg-neutral-50 dark:text-white dark:bg-(--purple-1000)'>
           <header className='flex justify-end'>
             {/* THEME BUTTON */}
             <button
@@ -29,14 +30,17 @@ export default function Auth() {
               <DarkIcon width='18' path={ICONS.moon} />
             </button>
           </header>
-          <Outlet />
-          <AuthSlider
-            setIsSignupPage={setIsSignupPage}
-            isSignupPage={isSignupPage}
-          />
-          <AuthForm isSignupPage={isSignupPage} />
-        </section>
-      </main>
+          <main className='flex flex-col justify-center h-full'>
+            <GreetingHeader isSignupPage={isSignupPage} />
+            <AuthSlider
+              setIsSignupPage={setIsSignupPage}
+              isSignupPage={isSignupPage}
+            />
+            <AuthForm isSignupPage={isSignupPage} />
+            <AuthFooter />
+          </main>
+        </aside>
+      </section>
     </>
   );
 }

@@ -9,7 +9,7 @@ export default function Hero() {
   const themeContext = useContext(ThemeContext);
 
   return (
-    <aside className='pl-10 pr-5 overflow-hidden border-r border-r-neutral-100 dark:border-r-neutral-800 hidden transition-colors relative md:flex md:flex-col justify-center dark:text-white md:flex-[1.5] bg-neutral-50 dark:bg-(--purple-1000)'>
+    <aside className='pl-10 shadow-lg dark:shadow-neutral-900  pr-5 overflow-hidden border-r border-r-neutral-100 dark:border-r-neutral-800 hidden transition-colors relative md:flex md:flex-col justify-center dark:text-white md:flex-[1.5] bg-neutral-50 dark:bg-(--purple-1000)'>
       <TopBlurredBubble />
       <header className='flex items-center'>
         <DarkLogo />

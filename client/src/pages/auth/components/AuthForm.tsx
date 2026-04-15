@@ -1,34 +1,43 @@
 export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
   return (
-    <form className='mt-5! flex flex-col gap-3'>
+    <form
+      onSubmit={(e) => e.preventDefault()}
+      className='mt-5! flex flex-col gap-2'
+    >
       {isSignupPage && (
         <>
           <div className=' flex flex-col'>
-            <label htmlFor='firstName'>First Name</label>
+            <label className='text-sm font-medium mt-2!' htmlFor='firstName'>
+              First Name
+            </label>
             <input
-              className='border p-1.5 rounded-xl border-neutral-300 text-neutral-900'
+              className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
               type='text'
               name='firstName'
               id='firstName'
-              placeholder='John'
+              placeholder='e.g John'
             />
           </div>
           <div className=' flex flex-col'>
-            <label htmlFor='lastName'>Last Name</label>
+            <label className='text-sm font-medium mt-2!' htmlFor='lastName'>
+              Last Name
+            </label>
             <input
-              className='border p-1.5 rounded-xl border-neutral-300 text-neutral-900'
+              className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
               type='text'
               name='lastName'
               id='lastName'
-              placeholder='Doe'
+              placeholder='e.g Doe'
             />
           </div>
         </>
       )}
       <div className=' flex flex-col'>
-        <label htmlFor='email'>Email</label>
+        <label className='text-sm font-medium mt-2!' htmlFor='email'>
+          Email
+        </label>
         <input
-          className='border p-1.5 rounded-xl border-neutral-300 text-neutral-900'
+          className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
           type='email'
           name='email'
           id='email'
@@ -36,9 +45,11 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
         />
       </div>
       <div className=' flex flex-col'>
-        <label htmlFor='password'>Password</label>
+        <label className='text-sm font-medium mt-2!' htmlFor='password'>
+          Password
+        </label>
         <input
-          className='border p-1.5 rounded-xl border-neutral-300 text-neutral-900'
+          className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
           type='password'
           name='password'
           id='password'
@@ -47,9 +58,11 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
       </div>
       {isSignupPage && (
         <div className=' flex flex-col'>
-          <label htmlFor='passConfirm'>Repeat password</label>
+          <label className='text-sm font-medium mt-2!' htmlFor='passConfirm'>
+            Repeat password
+          </label>
           <input
-            className='border p-1.5 rounded-xl border-neutral-300 text-neutral-900'
+            className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
             type='password'
             name='passConfirm'
             id='passConfirm'
@@ -57,6 +70,9 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
           />
         </div>
       )}
+      <button className='bg-purple-700 mt-3! p-2  shadow-xl font-medium! rounded-xl text-white'>
+        {isSignupPage ? 'Create Account' : 'Sign In'}
+      </button>
     </form>
   );
 }
