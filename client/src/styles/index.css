@@ -9,6 +9,16 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.form-input {
+  @apply border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-200 text-neutral-900;
+}
+.form-label {
+  @apply text-sm font-medium mt-2!;
+}
+.form-button {
+  @apply flex hover:bg-purple-800 transition-colors items-center justify-center gap-5 bg-purple-700 mt-3! p-2  shadow-xl font-medium! rounded-xl text-white;
+}
+
 /* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,

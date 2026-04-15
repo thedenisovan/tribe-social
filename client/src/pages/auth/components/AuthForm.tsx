@@ -6,24 +6,24 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
     >
       {isSignupPage && (
         <>
-          <div className=' flex flex-col'>
-            <label className='text-sm font-medium mt-2!' htmlFor='firstName'>
+          <div className='flex flex-col'>
+            <label className='form-label' htmlFor='firstName'>
               First Name
             </label>
             <input
-              className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
+              className='form-input'
               type='text'
               name='firstName'
               id='firstName'
               placeholder='e.g John'
             />
           </div>
-          <div className=' flex flex-col'>
-            <label className='text-sm font-medium mt-2!' htmlFor='lastName'>
+          <div className='flex flex-col'>
+            <label className='form-label' htmlFor='lastName'>
               Last Name
             </label>
             <input
-              className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
+              className='form-input'
               type='text'
               name='lastName'
               id='lastName'
@@ -32,24 +32,24 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
           </div>
         </>
       )}
-      <div className=' flex flex-col'>
-        <label className='text-sm font-medium mt-2!' htmlFor='email'>
+      <div className='flex flex-col'>
+        <label className='form-label' htmlFor='email'>
           Email
         </label>
         <input
-          className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
+          className='form-input'
           type='email'
           name='email'
           id='email'
           placeholder='johnDoe@example.com'
         />
       </div>
-      <div className=' flex flex-col'>
-        <label className='text-sm font-medium mt-2!' htmlFor='password'>
+      <div className='flex flex-col'>
+        <label className='form-label' htmlFor='password'>
           Password
         </label>
         <input
-          className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
+          className='form-input'
           type='password'
           name='password'
           id='password'
@@ -57,12 +57,12 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
         />
       </div>
       {isSignupPage && (
-        <div className=' flex flex-col'>
-          <label className='text-sm font-medium mt-2!' htmlFor='passConfirm'>
+        <div className='flex flex-col'>
+          <label className='form-label' htmlFor='passConfirm'>
             Repeat password
           </label>
           <input
-            className='border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-300 text-neutral-900'
+            className='form-input'
             type='password'
             name='passConfirm'
             id='passConfirm'
@@ -70,8 +70,18 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
           />
         </div>
       )}
-      <button className='bg-purple-700 mt-3! p-2  shadow-xl font-medium! rounded-xl text-white'>
-        {isSignupPage ? 'Create Account' : 'Sign In'}
+      <button className='group form-button'>
+        {isSignupPage ? 'Create Account' : 'Sign In'}{' '}
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='20px'
+          viewBox='0 -960 960 960'
+          width='20px'
+          fill='#e3e3e3'
+          className='group-hover:translate-x-1 transition-transform'
+        >
+          <path d='M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z' />
+        </svg>
       </button>
     </form>
   );
