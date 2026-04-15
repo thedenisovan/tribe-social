@@ -1,3 +1,4 @@
+// Header for auth section
 export default function GreetingHeader({
   header,
   paragraph,

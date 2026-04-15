@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 
-export default function AuthSelector({
+export default function AuthSlider({
   isSignupPage,
   setIsSignupPage,
 }: {
