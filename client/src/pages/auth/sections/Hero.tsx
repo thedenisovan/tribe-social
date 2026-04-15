@@ -9,7 +9,7 @@ export default function Hero() {
   const themeContext = useContext(ThemeContext);
 
   return (
-    <aside className='pl-10 pr-5 overflow-hidden hidden duration-200 transition-colors relative md:flex md:flex-col justify-center dark:text-white md:flex-[1.5] bg-neutral-50 dark:bg-(--purple-1000)'>
+    <aside className='pl-10 pr-5 overflow-hidden border-r border-r-neutral-100 dark:border-r-neutral-800 hidden transition-colors relative md:flex md:flex-col justify-center dark:text-white md:flex-[1.5] bg-neutral-50 dark:bg-(--purple-1000)'>
       <TopBlurredBubble />
       <header className='flex items-center'>
         <DarkLogo />
@@ -30,7 +30,7 @@ export default function Hero() {
         </span>{' '}
         are waiting.
       </h2>
-      <p className='text-lg  dark:text-neutral-300 text-neutral-500 max-w-150'>
+      <p className='text-lg  dark:text-gray-300 text-gray-500 max-w-150'>
         Share moments, build communities and connect with people who actually
         get you - without the noise.
       </p>

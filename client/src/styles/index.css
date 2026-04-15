@@ -4,6 +4,7 @@
   --font-spicy: 'Spicy Rice', 'Roboto';
   --font-bubblegum: 'Bubblegum Sans', 'Roboto';
   --purple-1000: #101028;
+  --jakarta: 'Plus Jakarta Sans', 'Roboto', 'Bubblegum Sans';
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -30,7 +31,7 @@ body {
   /* 5. Improve text rendering */
   -webkit-font-smoothing: antialiased;
   font-family:
-    'Roboto',
+    'Plus Jakarta Sans',
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
