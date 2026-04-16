@@ -2,7 +2,7 @@ import { GithubLogo, GithubLogoDark, GoogleLogo } from './Logo';
 
 export default function AuthFooter() {
   return (
-    <footer className='my-8! flex flex-col gap-5'>
+    <footer className='my-8! flex flex-col gap-6'>
       <div className='flex items-center'>
         <div className='flex-1 h-px border-t border-gray-400 dark:border-gray-700'></div>
         <p className='mx-4! text-xs dark:text-neutral-400 text-neutral-600'>

@@ -1,3 +1,6 @@
+import { useContext } from 'react';
+import AuthContext from '../../../context/AuthContext';
+
 export default function AuthSlider({
   isSignupPage,
   setIsSignupPage,
@@ -5,18 +8,28 @@ export default function AuthSlider({
   isSignupPage: boolean;
   setIsSignupPage: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const authContext = useContext(AuthContext);
+
   return (
     <div className='relative shadow-md dark:bg-purple-950/30  font-light text-center bg-neutral-100 p-1.5 rounded-2xl'>
       <div className='grid items-center grid-cols-2'>
         <button
-          onClick={() => setIsSignupPage(false)}
-          className='flex-1 dark:text-neutral-200'
+          onClick={() => {
+            setIsSignupPage(false);
+            authContext?.resetForm();
+            authContext?.resetFormErrors();
+          }}
+          className='cursor-pointer flex-1 dark:text-neutral-200'
         >
           Sign In
         </button>
         <button
-          onClick={() => setIsSignupPage(true)}
-          className='flex-1 dark:text-neutral-200'
+          onClick={() => {
+            setIsSignupPage(true);
+            authContext?.resetForm();
+            authContext?.resetFormErrors();
+          }}
+          className='cursor-pointer flex-1 dark:text-neutral-200'
         >
           Sign Up
         </button>

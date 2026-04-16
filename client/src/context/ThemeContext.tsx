@@ -1,9 +1,9 @@
 import { createContext } from 'react';
 
-type ThemeContextType = {
+interface ThemeContextType {
   isLightTheme: boolean;
   setIsLightTheme: React.Dispatch<React.SetStateAction<boolean>>;
-};
+}
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 

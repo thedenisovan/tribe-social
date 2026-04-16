@@ -10,16 +10,19 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .form-input {
-  @apply border p-2.5 dark:border-neutral-700 mt-1! dark:text-neutral-200 rounded-xl border-neutral-200 text-neutral-900;
+  @apply border-neutral-300 dark:border-neutral-700 border p-2.5 mt-1! dark:text-neutral-200 rounded-xl text-neutral-900;
 }
 .form-label {
-  @apply text-sm font-medium mt-2!;
+  @apply text-sm font-medium mt-2! justify-between;
 }
 .form-button {
   @apply flex hover:bg-purple-800 transition-colors items-center justify-center gap-5 bg-purple-700 mt-3! p-2  shadow-xl font-medium! rounded-xl text-white;
 }
 .auth-button {
   @apply flex items-center gap-2 justify-center border border-neutral-300 hover:bg-neutral-200/50 rounded-xl dark:border-neutral-600 dark:hover:bg-gray-600/40 transition-colors p-1;
+}
+.error-span {
+  @apply text-sm text-red-600 dark:text-red-400 mt-1;
 }
 
 /* 1. Use a more-intuitive box-sizing model */
