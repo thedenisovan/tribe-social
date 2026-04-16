@@ -18,6 +18,9 @@
 .form-button {
   @apply flex hover:bg-purple-800 transition-colors items-center justify-center gap-5 bg-purple-700 mt-3! p-2  shadow-xl font-medium! rounded-xl text-white;
 }
+.auth-button {
+  @apply flex items-center gap-2 justify-center border border-neutral-300 hover:bg-neutral-200/50 rounded-xl dark:border-neutral-600 dark:hover:bg-gray-600/40 transition-colors p-1;
+}
 
 /* 1. Use a more-intuitive box-sizing model */
 *,

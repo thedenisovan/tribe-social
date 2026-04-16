@@ -1,6 +1,8 @@
+import { GithubLogo, GithubLogoDark, GoogleLogo } from './Logo';
+
 export default function AuthFooter() {
   return (
-    <footer className='mt-8! flex flex-col gap-5'>
+    <footer className='my-8! flex flex-col gap-5'>
       <div className='flex items-center'>
         <div className='flex-1 h-px border-t border-gray-400 dark:border-gray-700'></div>
         <p className='mx-4! text-xs dark:text-neutral-400 text-neutral-600'>
@@ -8,9 +10,17 @@ export default function AuthFooter() {
         </p>
         <div className='flex-1 h-px border-t border-gray-400 dark:border-gray-700'></div>
       </div>
-      <div className='grid grid-cols-2'>
-        <button>Google</button>
-        <button>GitHub</button>
+      <div className='grid grid-cols-2 gap-2'>
+        <button className='auth-button'>
+          <GoogleLogo />
+          <p className='font-bold'>Google</p>
+        </button>
+        <button className='auth-button'>
+          <p>
+            <GithubLogo />
+            <GithubLogoDark />
+          </p>
+        </button>
       </div>
       <p className='text-center text-xs dark:text-neutral-400'>
         By continuing, you agree to Tribe's{' '}

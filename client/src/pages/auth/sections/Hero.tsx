@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import InfoBubble from '../components/InfoBubble';
 import LetterBubble from '../components/LetterBubble';
-import { DarkLogo } from '../components/Logo';
-import { LightLogo } from '../components/Logo';
+import { DarkLogo, LightLogo } from '../components/Logo';
 import ThemeContext from '../../../context/ThemeContext';
 
 export default function Hero() {
@@ -28,7 +27,7 @@ export default function Hero() {
       setParagraphText((prev) => [...prev, strArr[currentLetterInParagraph]]);
       // Update index of curr letter in paragraph
       setCurrentLetterInParagraph(currentLetterInParagraph + 1);
-    }, 35);
+    }, 15);
 
     return () => clearInterval(interval);
   });
