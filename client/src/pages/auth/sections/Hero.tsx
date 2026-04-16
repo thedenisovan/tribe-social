@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import InfoBubble from '../components/InfoBubble';
 import LetterBubble from '../components/LetterBubble';
 import { DarkLogo } from '../components/Logo';
@@ -7,6 +7,31 @@ import ThemeContext from '../../../context/ThemeContext';
 
 export default function Hero() {
   const themeContext = useContext(ThemeContext);
+  // String which holds value of current paragraph string filling
+  const [paragraphText, setParagraphText] = useState(['']);
+  // * Index which works as cursor to follow index paragraph text location
+  const [currentLetterInParagraph, setCurrentLetterInParagraph] = useState(0);
+
+  const str = `Share moments, build communities and connect with people who actually
+        get you - without the noise.`;
+  const strArr = str.split('');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (currentLetterInParagraph >= strArr.length) {
+        clearInterval(interval);
+        return;
+      }
+
+      // * Set state of paragraphText to it's previous value plus
+      // * to  letter of strArray at index of - currentLetterInParagraph
+      setParagraphText((prev) => [...prev, strArr[currentLetterInParagraph]]);
+      // Update index of curr letter in paragraph
+      setCurrentLetterInParagraph(currentLetterInParagraph + 1);
+    }, 35);
+
+    return () => clearInterval(interval);
+  });
 
   return (
     <aside className='pl-10 shadow-lg dark:shadow-neutral-900  pr-5 overflow-hidden border-r border-r-neutral-100 dark:border-r-neutral-800 hidden transition-colors relative md:flex md:flex-col justify-center dark:text-white md:flex-[1.5] bg-neutral-50 dark:bg-(--purple-1000)'>
@@ -30,9 +55,8 @@ export default function Hero() {
         </span>{' '}
         are waiting.
       </h2>
-      <p className='text-lg  dark:text-gray-300 text-gray-500 max-w-150'>
-        Share moments, build communities and connect with people who actually
-        get you - without the noise.
+      <p className='text-lg  dark:text-gray-300 text-gray-500 max-w-180'>
+        {paragraphText}
       </p>
       <footer className='absolute flex flex-col bottom-20 text-black'>
         <div className='flex items-center'>
