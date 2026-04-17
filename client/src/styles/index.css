@@ -24,6 +24,9 @@
 .error-span {
   @apply text-sm text-red-600 dark:text-red-400 mt-1;
 }
+.hr {
+  @apply flex-1 h-px border-t border-gray-300 dark:border-gray-700;
+}
 
 /* 1. Use a more-intuitive box-sizing model */
 *,

@@ -18,7 +18,7 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
       className='mt-5! flex flex-col gap-2'
     >
       {isSignupPage && (
-        <>
+        <div className='grid lg:grid-cols-2 gap-2'>
           <div className='flex flex-col'>
             <label className='form-label' htmlFor='firstName'>
               First Name{' '}
@@ -71,7 +71,7 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
               {authContext.formErrors.lastName}
             </span>
           </div>
-        </>
+        </div>
       )}
       <div className='flex flex-col'>
         <label className='form-label' htmlFor='email'>
@@ -94,54 +94,56 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
         />
         <span className='error-span'>{authContext.formErrors.email}</span>
       </div>
-      <div className='flex flex-col'>
-        <label className='form-label' htmlFor='password'>
-          Password
-        </label>
-        <input
-          onChange={(e) =>
-            authContext.setFormData({
-              ...authContext.formData,
-              password: e.target.value,
-            })
-          }
-          className='form-input'
-          type='password'
-          name='password'
-          id='password'
-          value={authContext.formData.password}
-          required
-          placeholder='******'
-          pattern='^(?=.*[A-Z]).{6,}$'
-        />
-        <span className='error-span'>{authContext.formErrors.password}</span>
-      </div>
-      {isSignupPage && (
+      <div className={`${isSignupPage && 'grid lg:grid-cols-2 gap-2'}`}>
         <div className='flex flex-col'>
-          <label className='form-label' htmlFor='passConfirm'>
-            Password confirmation
+          <label className='form-label' htmlFor='password'>
+            Password
           </label>
           <input
             onChange={(e) =>
               authContext.setFormData({
                 ...authContext.formData,
-                passwordConfirmation: e.target.value,
+                password: e.target.value,
               })
             }
             className='form-input'
             type='password'
-            name='passConfirm'
-            id='passConfirm'
-            value={authContext.formData.passwordConfirmation}
+            name='password'
+            id='password'
+            value={authContext.formData.password}
             required
             placeholder='******'
             pattern='^(?=.*[A-Z]).{6,}$'
           />
-          <span className='error-span'>
-            {authContext.formErrors.passwordConfirmation}
-          </span>
+          <span className='error-span'>{authContext.formErrors.password}</span>
         </div>
-      )}
+        {isSignupPage && (
+          <div className='flex flex-col'>
+            <label className='form-label' htmlFor='passConfirm'>
+              Password confirmation
+            </label>
+            <input
+              onChange={(e) =>
+                authContext.setFormData({
+                  ...authContext.formData,
+                  passwordConfirmation: e.target.value,
+                })
+              }
+              className='form-input'
+              type='password'
+              name='passConfirm'
+              id='passConfirm'
+              value={authContext.formData.passwordConfirmation}
+              required
+              placeholder='******'
+              pattern='^(?=.*[A-Z]).{6,}$'
+            />
+            <span className='error-span'>
+              {authContext.formErrors.passwordConfirmation}
+            </span>
+          </div>
+        )}
+      </div>
       <button
         type='button'
         onClick={() => {

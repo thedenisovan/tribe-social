@@ -33,7 +33,7 @@ export default function Auth() {
             resetFormErrors,
           }}
         >
-          <aside className='flex-1 max-w-185 min-w-85 py-6 px-6 lg:px-20 transition-colors bg-neutral-50 dark:text-white dark:bg-(--purple-1000)'>
+          <aside className='flex-1 max-w-185 min-w-80 py-6 px-6 lg:px-20 transition-colors bg-neutral-50 dark:text-white dark:bg-(--purple-1000)'>
             <header className='flex justify-end'>
               {/* THEME BUTTON */}
               <button
