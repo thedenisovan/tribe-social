@@ -11,3 +11,119 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id             Int      @id @default(autoincrement())
+  firstName      String
+  lastName       String
+  email          String   @unique
+  bio            String?
+  hashedPassword String
+  registeredAt   DateTime @default(now())
+  avatarUrl      String?
+  isOnline       Boolean  @default(false)
+
+  follower  Follow[] @relation("follower")
+  following Follow[] @relation("following")
+
+  requester FollowRequest[] @relation("requester")
+  receiver  FollowRequest[] @relation("receiver")
+
+  posts         Post[]          @relation("writtenPost")
+  likedPosts    LikeOnPost[]
+  comments      CommentOnPost[]
+  likedComments LikeOnComment[]
+  savedPosts    SavedPost[]
+}
+
+model Follow {
+  // * Who follows
+  follower   User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId Int
+
+  // * Who is being followed
+  following   User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId Int
+
+  @@id([followingId, followerId])
+}
+
+model FollowRequest {
+  // * Who sends follow request
+  requester   User @relation("requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  requesterId Int
+
+  // * Who receives follow request
+  receiver   User @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId Int
+
+  @@id([requesterId, receiverId])
+}
+
+model Post {
+  id           Int      @id @default(autoincrement())
+  author       User     @relation("writtenPost", fields: [authorId], references: [id], onDelete: Cascade)
+  authorId     Int
+  createdAt    DateTime @default(now())
+  postData     String
+  postMediaUrl String?
+
+  likes    LikeOnPost[]
+  comments CommentOnPost[]
+
+  saved    SavedPost[]
+  hashtags Hashtag[]
+}
+
+model Hashtag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  posts Post[]
+}
+
+model SavedPost {
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
+
+  savedBy   User @relation(fields: [savedById], references: [id], onDelete: Cascade)
+  savedById Int
+
+  savedAt DateTime @default(now())
+
+  @@id([postId, savedById])
+}
+
+model CommentOnPost {
+  commentId   Int      @id @default(autoincrement())
+  comment     String
+  commentedAt DateTime @default(now())
+
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
+
+  commentAuthor User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId      Int
+
+  likes LikeOnComment[]
+}
+
+model LikeOnPost {
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
+
+  likedBy User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int
+
+  @@id([postId, userId])
+}
+
+model LikeOnComment {
+  comment   CommentOnPost @relation(fields: [commentId], references: [commentId], onDelete: Cascade)
+  commentId Int
+
+  likedBy User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int
+
+  @@id([commentId, userId])
+}
