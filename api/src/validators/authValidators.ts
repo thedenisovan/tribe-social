@@ -49,10 +49,10 @@ function emailValidator(isSignupValidator: boolean) {
       });
 
       // If user exists and this is signupValidator
-      if (user && isSignupValidator) {
+      if (isSignupValidator && user) {
         throw new Error(`E-mail already in use.`);
         // Else if this is signinValidator and no user found throw this error
-      } else if (!user && !isSignupValidator) {
+      } else if (!isSignupValidator && !user) {
         throw new Error(generalErr);
       }
 
@@ -89,7 +89,7 @@ function passwordConfirmationValidator() {
 
 // Validator to make sure that user enters correct password to given email
 function signinPasswordValidator() {
-  // Return array of two validators, later will flatten in in main signin validator array
+  // Return array of two validators, later will flatten it, inside main signin validator array
   return [
     passwordValidator(),
     body('password').custom(async (value, { req }) => {
