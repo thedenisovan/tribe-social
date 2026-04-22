@@ -11,7 +11,7 @@ app.use(express.json());
 // Allows to work with form request bodies
 app.use(express.urlencoded());
 
-app.use('/', signupRoute);
+app.use('/signup', signupRoute);
 
 //* Register error handler middleware
 app.use(errorHandler);
