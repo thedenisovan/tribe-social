@@ -1,0 +1,35 @@
+import { NextFunction, Request, Response } from 'express';
+import prismaNeon from '../db/prisma.js';
+import bcrypt from 'bcryptjs';
+
+export default async function registerUser(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const { firstName, lastName, email, password, passwordConfirmation } =
+    req.body;
+
+  if (!firstName || !lastName || !email || !password || !passwordConfirmation) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  try {
+    const user = await prismaNeon.user.create({
+      data: {
+        firstName,
+        lastName,
+        email,
+        hashedPassword: await bcrypt.hash(password, 10),
+      },
+    });
+
+    if (user) {
+      return res.json({ msg: `User ${email} successfully registered.` });
+    } else {
+      return res.status(500).json({ error: 'Could not register user.' });
+    }
+  } catch (e) {
+    next(e);
+  }
+}

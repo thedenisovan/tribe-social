@@ -1,4 +1,4 @@
-import { afterAll, afterEach, describe, test } from '@jest/globals';
+import { afterAll, describe, test } from '@jest/globals';
 import signupRoute from '../routes/signup.route.js';
 import request from 'supertest';
 import express from 'express';
@@ -11,11 +11,11 @@ app.use(express.json());
 
 app.use('/signup', signupRoute);
 
-afterEach(async () => {
-  await prismaNeon.user.deleteMany({ where: { email: 'johnDoe@odin.net' } });
-});
-
 afterAll(async () => {
+  await prismaNeon.user.deleteMany({
+    where: { email: 'randomLongEmailAddressXQCPRT123@odin.net' },
+  });
+
   await prismaNeon.$disconnect();
 });
 
@@ -24,8 +24,11 @@ describe('POST /signup validator tests', () => {
     request(app)
       .post('/signup')
       .send({
-        ...validUser,
         firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        passwordConfirmation: '',
       })
       .expect('Content-Type', /json/)
       .expect({
@@ -37,88 +40,142 @@ describe('POST /signup validator tests', () => {
             path: 'firstName',
             location: 'body',
           },
+          {
+            type: 'field',
+            value: '',
+            msg: 'Last name is required.',
+            path: 'lastName',
+            location: 'body',
+          },
+          {
+            type: 'field',
+            value: '',
+            msg: 'Email is required.',
+            path: 'email',
+            location: 'body',
+          },
+          {
+            type: 'field',
+            value: '',
+            msg: 'Password is required.',
+            path: 'password',
+            location: 'body',
+          },
+          {
+            type: 'field',
+            value: '',
+            msg: 'Password confirmation is required.',
+            path: 'passwordConfirmation',
+            location: 'body',
+          },
         ],
       })
       .expect(200, done);
   });
 
-  // test('wrong format password should fail registration', (done) => {
-  //   request(app)
-  //     .post('/signup')
-  //     .send({
-  //       username: 'johnDoe',
-  //       email: 'johnDoe@odin.net',
-  //       password: 'wrongPass',
-  //       passwordConfirmation: 'wrongPass',
-  //     })
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       errors: [
-  //         {
-  //           type: 'field',
-  //           value: 'wrongPass',
-  //           msg: 'Password must be 6+ chars, with at least one uppercase, lowercase, number and symbol.',
-  //           path: 'password',
-  //           location: 'body',
-  //         },
-  //       ],
-  //     })
-  //     .expect(200, done);
-  // });
+  test('Name should contain only alphabetic characters', (done) => {
+    request(app)
+      .post('/signup')
+      .send({ ...validUser, firstName: 'Harold1' })
+      .expect('Content-Type', /json/)
+      .expect({
+        errors: [
+          {
+            type: 'field',
+            value: 'Harold1',
+            msg: 'First name must only contain letters.',
+            path: 'firstName',
+            location: 'body',
+          },
+        ],
+      })
+      .expect(200, done);
+  });
 
-  // test('wrong pass confirmation should fail registration', (done) => {
-  //   request(app)
-  //     .post('/signup')
-  //     .send({
-  //       username: 'johnDoe',
-  //       email: 'johnDoe@odin.net',
-  //       password: 'Admin123@',
-  //       passwordConfirmation: 'Admin123',
-  //     })
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       errors: [
-  //         {
-  //           type: 'field',
-  //           value: 'Admin123',
-  //           msg: 'Passwords did not match.',
-  //           path: 'passwordConfirmation',
-  //           location: 'body',
-  //         },
-  //       ],
-  //     })
-  //     .expect(200, done);
-  // });
+  test('Wrong format password should fail registration', (done) => {
+    request(app)
+      .post('/signup')
+      .send({ ...validUser, password: 'incorrect' })
+      .expect('Content-Type', /json/)
+      .expect({
+        errors: [
+          {
+            type: 'field',
+            value: 'incorrect',
+            msg: 'Password must be 6+ chars with at least one uppercase letter.',
+            path: 'password',
+            location: 'body',
+          },
+          {
+            type: 'field',
+            value: 'Admin1',
+            msg: 'Passwords did not match.',
+            path: 'passwordConfirmation',
+            location: 'body',
+          },
+        ],
+      })
+      .expect(200, done);
+  });
 
-  // test('user cant register if user with given email exists', (done) => {
-  //   request(app)
-  //     .post('/signup')
-  //     .send({
-  //       username: 'johnDoe',
-  //       email: 'johnDoe@odin.com',
-  //       password: 'Admin123@',
-  //       passwordConfirmation: 'Admin123@',
-  //     })
-  //     .expect('Content-Type', /json/)
-  //     .expect({
-  //       errors: [
-  //         {
-  //           type: 'field',
-  //           value: 'johnDoe@odin.com',
-  //           msg: 'E-mail already in use.',
-  //           path: 'email',
-  //           location: 'body',
-  //         },
-  //       ],
-  //     })
-  //     .expect(200, done);
-  // });
+  test('Wrong pass confirmation should fail registration', (done) => {
+    request(app)
+      .post('/signup')
+      .send({ ...validUser, passwordConfirmation: 'wrongPass' })
+      .expect('Content-Type', /json/)
+      .expect({
+        errors: [
+          {
+            type: 'field',
+            value: 'wrongPass',
+            msg: 'Passwords did not match.',
+            path: 'passwordConfirmation',
+            location: 'body',
+          },
+        ],
+      })
+      .expect(200, done);
+  });
+
+  test('User can register if email not in use.', (done) => {
+    request(app)
+      .post('/signup')
+      .send(validUser)
+      .expect('Content-Type', /json/)
+      .expect(
+        {
+          msg: 'User randomLongEmailAddressXQCPRT123@odin.net successfully registered.',
+        },
+        done,
+      );
+  });
+
+  test('User cant register if email in use', (done) => {
+    request(app)
+      .post('/signup')
+      .send(validUser)
+      .expect('Content-Type', /json/)
+      .expect(
+        {
+          errors: [
+            {
+              type: 'field',
+              value: 'randomLongEmailAddressXQCPRT123@odin.net',
+              msg: 'E-mail already in use.',
+              path: 'email',
+              location: 'body',
+            },
+          ],
+        },
+        done,
+      );
+  });
 });
 
 const validUser = {
   firstName: 'John',
   lastName: 'Doe',
-  email: 'johnDoe@odin.net',
+  email: 'randomLongEmailAddressXQCPRT123@odin.net',
   password: 'Admin1',
   passwordConfirmation: 'Admin1',
 };
