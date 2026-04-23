@@ -69,6 +69,7 @@ describe('POST /signup validator tests', () => {
             location: 'body',
           },
         ],
+        isUserCreated: false,
       })
       .expect(200, done);
   });
@@ -88,6 +89,7 @@ describe('POST /signup validator tests', () => {
             location: 'body',
           },
         ],
+        isUserCreated: false,
       })
       .expect(200, done);
   });
@@ -114,6 +116,7 @@ describe('POST /signup validator tests', () => {
             location: 'body',
           },
         ],
+        isUserCreated: false,
       })
       .expect(200, done);
   });
@@ -133,6 +136,7 @@ describe('POST /signup validator tests', () => {
             location: 'body',
           },
         ],
+        isUserCreated: false,
       })
       .expect(200, done);
   });
@@ -144,7 +148,8 @@ describe('POST /signup validator tests', () => {
       .expect('Content-Type', /json/)
       .expect(
         {
-          msg: 'User randomLongEmailAddressXQCPRT123@odin.net successfully registered.',
+          isUserCreated: true,
+          errors: [],
         },
         done,
       );
@@ -166,6 +171,7 @@ describe('POST /signup validator tests', () => {
               location: 'body',
             },
           ],
+          isUserCreated: false,
         },
         done,
       );

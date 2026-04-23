@@ -7,10 +7,9 @@ export default async function registerUser(
   res: Response,
   next: NextFunction,
 ) {
-  const { firstName, lastName, email, password, passwordConfirmation } =
-    req.body;
+  const { firstName, lastName, email, password } = req.body;
 
-  if (!firstName || !lastName || !email || !password || !passwordConfirmation) {
+  if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -25,7 +24,10 @@ export default async function registerUser(
     });
 
     if (user) {
-      return res.json({ msg: `User ${email} successfully registered.` });
+      return res.json({
+        isUserCreated: true,
+        errors: [],
+      });
     } else {
       return res.status(500).json({ error: 'Could not register user.' });
     }

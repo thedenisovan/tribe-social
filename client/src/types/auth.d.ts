@@ -5,3 +5,15 @@ export default interface AuthData {
   password: string;
   passwordConfirmation: string;
 }
+
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  bio?: string;
+  password: string;
+  registeredAt?: string;
+  avatarUrl?: string;
+  isOnline: boolean;
+}

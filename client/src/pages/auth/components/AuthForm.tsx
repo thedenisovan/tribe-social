@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import AuthContext from '../../../context/AuthContext';
 import { useNavigate } from 'react-router';
 import formValidator from '../../../utils/client.formValidator';
+import registerUser from '../../../services/registerUser.client';
 
 export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
   const authContext = useContext(AuthContext);
@@ -158,6 +159,16 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
           if (isValid) {
             authContext.resetForm();
             authContext.resetFormErrors();
+
+            if (isSignupPage) {
+              registerUser(
+                authContext.formData.email,
+                authContext.formData.firstName,
+                authContext.formData.lastName,
+                authContext.formData.password,
+                authContext.formData.passwordConfirmation,
+              );
+            }
           } else authContext.setFormErrors(errors);
         }}
         className='group form-button'
