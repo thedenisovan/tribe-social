@@ -7,6 +7,7 @@ function formValidator(
   lastName: string,
   password: string,
   passwordConfirmation: string,
+  isSignupPage: boolean,
 ) {
   const errors: AuthData = {
     firstName: '',
@@ -15,24 +16,6 @@ function formValidator(
     password: '',
     passwordConfirmation: '',
   };
-
-  // First Name
-  if (!firstName.trim()) {
-    errors.firstName = '❗What is your first name?';
-  } else if (firstName.length < 3 || firstName.length > 16) {
-    errors.firstName = '❗Must be 3 to 16 characters long.';
-  } else if (!REGEX.nameRegex.test(firstName)) {
-    errors.firstName = '❗Must contain only alphabetical characters.';
-  }
-
-  // Last Name
-  if (!lastName.trim()) {
-    errors.lastName = '❗What is your last name?';
-  } else if (lastName.length < 3 || lastName.length > 16) {
-    errors.lastName = '❗Must be 3 to 16 characters long.';
-  } else if (!REGEX.nameRegex.test(lastName)) {
-    errors.lastName = '❗Must contain only alphabetical characters.';
-  }
 
   // Email
   if (!email.trim()) {
@@ -48,16 +31,39 @@ function formValidator(
     errors.password = '❗6+ chars, with at least one uppercase.';
   }
 
-  // Password Confirmation
-  if (!passwordConfirmation.trim()) {
-    errors.passwordConfirmation = '❗Confirm your password.';
-  } else if (passwordConfirmation !== password) {
-    errors.passwordConfirmation = '❗Passwords do not match.';
+  if (isSignupPage) {
+    // First Name
+    if (!firstName.trim()) {
+      errors.firstName = '❗What is your first name?';
+    } else if (firstName.length < 3 || firstName.length > 16) {
+      errors.firstName = '❗Must be 3 to 16 characters long.';
+    } else if (!REGEX.nameRegex.test(firstName)) {
+      errors.firstName = '❗Must contain only alphabetical characters.';
+    }
+
+    // Last Name
+    if (!lastName.trim()) {
+      errors.lastName = '❗What is your last name?';
+    } else if (lastName.length < 3 || lastName.length > 16) {
+      errors.lastName = '❗Must be 3 to 16 characters long.';
+    } else if (!REGEX.nameRegex.test(lastName)) {
+      errors.lastName = '❗Must contain only alphabetical characters.';
+    }
+
+    // Password Confirmation
+    if (!passwordConfirmation.trim()) {
+      errors.passwordConfirmation = '❗Confirm your password.';
+    } else if (passwordConfirmation !== password) {
+      errors.passwordConfirmation = '❗Passwords do not match.';
+    }
   }
 
   const isValid = !Object.values(errors).some(Boolean);
 
-  return { isValid, errors };
+  return {
+    isValid,
+    errors,
+  };
 }
 
 export default formValidator;

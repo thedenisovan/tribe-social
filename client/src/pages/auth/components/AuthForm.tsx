@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import AuthContext from '../../../context/AuthContext';
 import { useNavigate } from 'react-router';
 import formValidator from '../../../utils/formValidator.client';
-import registerUser from '../../../services/registerUser.client';
+import userAuth from '../../../services/userAuth.client';
 import initialFormData from '../../../const/initialData';
 
 export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
@@ -156,6 +156,7 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
             authContext.formData.lastName,
             authContext.formData.password,
             authContext.formData.passwordConfirmation,
+            isSignupPage,
           );
 
           // If inputs is valid continue with user signup
@@ -165,24 +166,36 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
 
             // If this is signup try to send api request to signup user
             if (isSignupPage) {
-              const result = await registerUser(
+              const signupResult = await userAuth(
                 authContext.formData.email,
+                authContext.formData.password,
+                isSignupPage,
                 authContext.formData.firstName,
                 authContext.formData.lastName,
-                authContext.formData.password,
                 authContext.formData.passwordConfirmation,
               );
 
               // If isUserCreated return false
-              if (!result.isUserCreated) {
+              if (!signupResult.isUserCreated) {
                 // Set error message extracted from express validator
                 authContext.setFormErrors({
                   ...initialFormData,
-                  [result.errors[0].path]: result.errors[0].msg,
+                  [signupResult.errors[0].path]: signupResult.errors[0].msg,
                 });
               }
+              // Sign in user
+            } else if (!isSignupPage) {
+              await userAuth(
+                authContext.formData.email,
+                authContext.formData.password,
+                isSignupPage,
+              );
             }
-          } else authContext.setFormErrors(errors);
+          } else {
+            authContext.setFormErrors(errors);
+          }
+
+          console.log(isSignupPage);
         }}
         className='group form-button'
       >
