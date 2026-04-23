@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import prismaNeon from '../db/prisma.js';
 import bcrypt from 'bcryptjs';
+import { error } from 'node:console';
 
 export default async function registerUser(
   req: Request,
@@ -29,7 +30,7 @@ export default async function registerUser(
         errors: [],
       });
     } else {
-      return res.status(500).json({ error: 'Could not register user.' });
+      return res.status(401).json({ isUserCreated: false, errors: [] });
     }
   } catch (e) {
     next(e);

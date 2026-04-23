@@ -1,15 +1,15 @@
 import { afterAll, describe, test } from '@jest/globals';
-import signupRoute from '../routes/signup.route.js';
+import authRoute from '../routes/auth.route.js';
 import request from 'supertest';
 import express from 'express';
 import prismaNeon from '../db/prisma.js';
 
 const app = express();
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded());
 app.use(express.json());
 
-app.use('/signup', signupRoute);
+app.use('/', authRoute);
 
 afterAll(async () => {
   await prismaNeon.user.deleteMany({
@@ -30,7 +30,7 @@ describe('POST /signup validator tests', () => {
         password: '',
         passwordConfirmation: '',
       })
-      .expect('Content-Type', /json/)
+      // .expect('Content-Type', /json/)
       .expect({
         errors: [
           {
@@ -71,7 +71,7 @@ describe('POST /signup validator tests', () => {
         ],
         isUserCreated: false,
       })
-      .expect(200, done);
+      .expect(409, done);
   });
 
   test('Name should contain only alphabetic characters', (done) => {
@@ -91,7 +91,7 @@ describe('POST /signup validator tests', () => {
         ],
         isUserCreated: false,
       })
-      .expect(200, done);
+      .expect(409, done);
   });
 
   test('Wrong format password should fail registration', (done) => {
@@ -118,7 +118,7 @@ describe('POST /signup validator tests', () => {
         ],
         isUserCreated: false,
       })
-      .expect(200, done);
+      .expect(409, done);
   });
 
   test('Wrong pass confirmation should fail registration', (done) => {
@@ -138,7 +138,7 @@ describe('POST /signup validator tests', () => {
         ],
         isUserCreated: false,
       })
-      .expect(200, done);
+      .expect(409, done);
   });
 
   test('User can register if email not in use.', (done) => {

@@ -7,7 +7,9 @@ function validResult(req: Request, res: Response, next: NextFunction) {
   if (result.isEmpty()) {
     return next();
   } else {
-    return res.send({ errors: result.array(), isUserCreated: false });
+    return res
+      .status(409)
+      .json({ errors: result.array(), isUserCreated: false });
   }
 }
 
