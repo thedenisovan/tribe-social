@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 import AuthContext from '../../../context/AuthContext';
 import { useNavigate } from 'react-router';
-import formValidator from '../../../utils/client.formValidator';
+import formValidator from '../../../utils/formValidator.client';
 import registerUser from '../../../services/registerUser.client';
+import initialFormData from '../../../const/initialData';
 
 export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
   const authContext = useContext(AuthContext);
@@ -147,7 +148,8 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
       </div>
       <button
         type='button'
-        onClick={() => {
+        onClick={async () => {
+          // Validate user input on client side
           const { isValid, errors } = formValidator(
             authContext.formData.email,
             authContext.formData.firstName,
@@ -156,18 +158,29 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
             authContext.formData.passwordConfirmation,
           );
 
+          // If inputs is valid continue with user signup
           if (isValid) {
             authContext.resetForm();
             authContext.resetFormErrors();
 
+            // If this is signup try to send api request to signup user
             if (isSignupPage) {
-              registerUser(
+              const result = await registerUser(
                 authContext.formData.email,
                 authContext.formData.firstName,
                 authContext.formData.lastName,
                 authContext.formData.password,
                 authContext.formData.passwordConfirmation,
               );
+
+              // If isUserCreated return false
+              if (!result.isUserCreated) {
+                // Set error message extracted from express validator
+                authContext.setFormErrors({
+                  ...initialFormData,
+                  [result.errors[0].path]: result.errors[0].msg,
+                });
+              }
             }
           } else authContext.setFormErrors(errors);
         }}

@@ -8,6 +8,7 @@ import AuthForm from './components/AuthForm';
 import AuthFooter from './components/AuthFooter';
 import GreetingHeader from './components/GreetingHeader';
 import AuthContext from '../../context/AuthContext';
+import initialFormData from '../../const/initialData';
 
 export default function Auth() {
   const themeContext = useContext(ThemeContext);
@@ -61,11 +62,3 @@ export default function Auth() {
     </>
   );
 }
-
-const initialFormData = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  password: '',
-  passwordConfirmation: '',
-};
