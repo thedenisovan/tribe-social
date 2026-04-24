@@ -3,17 +3,17 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import prismaNeon from '../db/prisma.js';
 import bcrypt from 'bcryptjs';
 
-passport.use(new LocalStrategy(verifyCallback));
+passport.use(new LocalStrategy({ usernameField: 'email' }, verifyCallback));
 
 // Callback for passport strategy
 async function verifyCallback(
-  username: string,
+  email: string,
   password: string,
   done: (err: Error | null | unknown, user?: any, info?: any) => void,
 ) {
   try {
     const user = await prismaNeon.user.findUnique({
-      where: { email: username },
+      where: { email },
     });
 
     if (!user) {

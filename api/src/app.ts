@@ -3,6 +3,7 @@ import cors from 'cors';
 import errorHandler from './middleware/errorMiddleware.js';
 import authRoute from './routes/auth.route.js';
 import passport from 'passport';
+import './configs/passport.js';
 
 const app = express();
 

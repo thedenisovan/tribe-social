@@ -4,6 +4,8 @@ import request from 'supertest';
 import express from 'express';
 import prismaNeon from '../db/prisma.js';
 import passport from 'passport';
+import '../configs/passport.js';
+import 'dotenv/config';
 
 const app = express();
 
@@ -25,7 +27,7 @@ describe('POST /signin validator tests', () => {
         email: '',
         password: '',
       })
-      // .expect('Content-Type', /json/)
+      .expect('Content-Type', /json/)
       .expect({
         errors: [
           {
@@ -62,6 +64,7 @@ describe('POST /signin validator tests', () => {
         email: 'thedenisovan@proton.me',
         password: 'Admin2',
       })
+      .expect('Content-Type', /json/)
       .expect({
         errors: [
           {
@@ -82,9 +85,8 @@ describe('POST /signin validator tests', () => {
       .post('/signin')
       .send({
         email: 'thedenisovan@proton.me',
-        password: 'Admin1',
+        password: process.env.PASSWORD,
       })
-      .expect({ msg: 'success' })
       .expect(200, done);
   });
 });

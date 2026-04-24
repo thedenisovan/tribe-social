@@ -1,27 +1,19 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import {
-  signupValidator,
-  signinValidator,
-} from '../validators/authValidators.js';
+import { Router } from 'express';
+import * as validator from '../validators/authValidators.js';
 import validResult from '../validators/validationResult.js';
 import registerUser from '../controllers/registerUser.js';
 import passport from 'passport';
+import generateJwtToken from '../middleware/jwt.js';
 
 const authRoute = Router();
 
-authRoute.post('/signup', signupValidator, validResult, registerUser);
+authRoute.post('/signup', validator.signupValidator, validResult, registerUser);
 authRoute.post(
   '/signin',
-  signinValidator,
+  validator.signinValidator,
   validResult,
-  //   passport.authenticate('local'),
-  (req: Request, res: Response, next: NextFunction) => {
-    try {
-      return res.status(200).json({ msg: 'success' });
-    } catch (e) {
-      next(e);
-    }
-  },
+  passport.authenticate('local', { session: false }),
+  generateJwtToken,
 );
 
 export default authRoute;

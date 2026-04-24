@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import prismaNeon from '../db/prisma.js';
 import bcrypt from 'bcryptjs';
-import { error } from 'node:console';
 
 export default async function registerUser(
   req: Request,
