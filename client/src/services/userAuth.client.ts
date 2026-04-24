@@ -44,6 +44,5 @@ export default async function userAuth(
   }
 
   const result = await response.json();
-
   return result;
 }

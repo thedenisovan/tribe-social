@@ -185,17 +185,25 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
               }
               // Sign in user
             } else if (!isSignupPage) {
-              await userAuth(
+              const signinResult = await userAuth(
                 authContext.formData.email,
                 authContext.formData.password,
                 isSignupPage,
               );
+
+              // If errors set them to error state
+              if (typeof signinResult.isUserCreated !== 'undefined') {
+                authContext.setFormErrors({
+                  ...initialFormData,
+                  [signinResult.errors[0].path]: signinResult.errors[0].msg,
+                });
+              } else {
+                localStorage.setItem('token', signinResult.token);
+              }
             }
           } else {
             authContext.setFormErrors(errors);
           }
-
-          console.log(isSignupPage);
         }}
         className='group form-button'
       >
