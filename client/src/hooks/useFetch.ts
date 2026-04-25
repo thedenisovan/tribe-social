@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import URL from '../const/url';
+import URL from '../constants/url';
 
 // Custom react hook with generic data type
 export default function useFetch<T>(url: string) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<T | null>(null);
   const token = localStorage.getItem('token');
@@ -11,8 +11,6 @@ export default function useFetch<T>(url: string) {
   useEffect(() => {
     // Async data fetcher
     const fetchData = async () => {
-      setIsLoading(true);
-
       try {
         const response = await fetch(`${URL.baseURL}${url}`, {
           headers: {

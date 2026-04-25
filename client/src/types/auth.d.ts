@@ -7,9 +7,7 @@ export default interface AuthData {
 }
 
 export interface Decoded {
-  user: User;
-  iat: number;
-  exp: number;
+  decoded: { user: User; iat: number; exp: number };
 }
 
 interface User {

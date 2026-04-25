@@ -1,5 +1,5 @@
 import Hero from './sections/Hero';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import ThemeContext from '../../context/ThemeContext';
 import { DarkIcon, LightIcon } from '../../components/common/ThemeIcons';
 import ICONS from '../../constants/icons';
@@ -8,13 +8,22 @@ import AuthForm from './components/AuthForm';
 import AuthFooter from './components/AuthFooter';
 import GreetingHeader from './components/GreetingHeader';
 import AuthContext from '../../context/AuthContext';
-import initialFormData from '../../const/initialData';
+import initialFormData from '../../constants/initialData';
+import { useNavigate } from 'react-router';
 
 export default function Auth() {
   const themeContext = useContext(ThemeContext);
   const [isSignupPage, setIsSignupPage] = useState<boolean>(false);
   const [formData, setFormData] = useState(initialFormData);
   const [formErrors, setFormErrors] = useState(initialFormData);
+  const nav = useNavigate();
+
+  // If token is in local storage navigate user to home page
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      nav('/dashboard/home');
+    }
+  }, [nav]);
 
   const resetForm = () => setFormData(initialFormData);
   const resetFormErrors = () => setFormErrors(initialFormData);

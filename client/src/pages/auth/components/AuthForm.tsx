@@ -3,7 +3,7 @@ import AuthContext from '../../../context/AuthContext';
 import { useNavigate } from 'react-router';
 import formValidator from '../../../utils/formValidator.client';
 import userAuth from '../../../services/userAuth.client';
-import initialFormData from '../../../const/initialData';
+import initialFormData from '../../../constants/initialData';
 
 export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
   const authContext = useContext(AuthContext);

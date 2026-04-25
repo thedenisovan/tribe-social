@@ -1,4 +1,4 @@
-import URL from '../const/url';
+import URL from '../constants/url';
 
 export default async function userAuth(
   email: string,
