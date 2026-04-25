@@ -24,7 +24,7 @@ export default function generateJwtToken(
 
 export function verifyToken(
   // Intersect request object with token eg req.token
-  req: Request & { token: string },
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -33,10 +33,8 @@ export function verifyToken(
 
   // Check if bearer is undefined
   if (typeof bearerHeader !== 'undefined') {
-    // Split at space
+    // Split at space and extract token
     const token = bearerHeader.split(' ')[1];
-    // Set token
-    req.token = token;
 
     // Verify token against secret - if valid, decode it.
     jwt.verify(token, secret, (err, decoded: any) => {
@@ -44,10 +42,9 @@ export function verifyToken(
       if (err) return res.status(403).json({ msg: 'Invalid token' });
 
       // Attach decoded user data to request object
-      req.user = decoded.user;
-      return res.json({ user: req.user });
+      req.user = decoded;
       // Pass control to next middleware/handler
-      // next();
+      next();
     });
   } else {
     res.sendStatus(403).json({ msg: 'Token was undefined.' });
