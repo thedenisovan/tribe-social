@@ -6,7 +6,13 @@ export default interface AuthData {
   passwordConfirmation: string;
 }
 
-export interface User {
+export interface Decoded {
+  user: User;
+  iat: number;
+  exp: number;
+}
+
+interface User {
   id: number;
   firstName: string;
   lastName: string;

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import AuthContext from '../../../context/AuthContext';
 import { useNavigate } from 'react-router';
 import formValidator from '../../../utils/formValidator.client';
@@ -7,12 +7,60 @@ import initialFormData from '../../../const/initialData';
 
 export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
   const authContext = useContext(AuthContext);
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
   const navigate = useNavigate();
 
   if (!authContext) {
     navigate('/error');
     return <></>;
   }
+
+  const signupUser = async () => {
+    setIsAuthLoading(true);
+
+    const signupResult = await userAuth(
+      authContext.formData.email,
+      authContext.formData.password,
+      isSignupPage,
+      authContext.formData.firstName,
+      authContext.formData.lastName,
+      authContext.formData.passwordConfirmation,
+    );
+
+    // If isUserCreated return false
+    if (!signupResult.isUserCreated) {
+      // Set error message extracted from express validator
+      authContext.setFormErrors({
+        ...initialFormData,
+        [signupResult.errors[0].path]: signupResult.errors[0].msg,
+      });
+    }
+
+    setIsAuthLoading(false);
+  };
+
+  const signinUser = async () => {
+    setIsAuthLoading(true);
+
+    const signinResult = await userAuth(
+      authContext.formData.email,
+      authContext.formData.password,
+      isSignupPage,
+    );
+
+    // If errors set them to error state
+    if (typeof signinResult.isUserCreated !== 'undefined') {
+      authContext.setFormErrors({
+        ...initialFormData,
+        [signinResult.errors[0].path]: signinResult.errors[0].msg,
+      });
+    } else {
+      localStorage.setItem('token', signinResult.token);
+      navigate('/dashboard/home');
+    }
+
+    setIsAuthLoading(false);
+  };
 
   return (
     <form
@@ -166,40 +214,10 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
 
             // If this is signup try to send api request to signup user
             if (isSignupPage) {
-              const signupResult = await userAuth(
-                authContext.formData.email,
-                authContext.formData.password,
-                isSignupPage,
-                authContext.formData.firstName,
-                authContext.formData.lastName,
-                authContext.formData.passwordConfirmation,
-              );
-
-              // If isUserCreated return false
-              if (!signupResult.isUserCreated) {
-                // Set error message extracted from express validator
-                authContext.setFormErrors({
-                  ...initialFormData,
-                  [signupResult.errors[0].path]: signupResult.errors[0].msg,
-                });
-              }
+              signupUser();
               // Sign in user
             } else if (!isSignupPage) {
-              const signinResult = await userAuth(
-                authContext.formData.email,
-                authContext.formData.password,
-                isSignupPage,
-              );
-
-              // If errors set them to error state
-              if (typeof signinResult.isUserCreated !== 'undefined') {
-                authContext.setFormErrors({
-                  ...initialFormData,
-                  [signinResult.errors[0].path]: signinResult.errors[0].msg,
-                });
-              } else {
-                localStorage.setItem('token', signinResult.token);
-              }
+              signinUser();
             }
           } else {
             authContext.setFormErrors(errors);
@@ -207,18 +225,42 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
         }}
         className='group form-button'
       >
-        {isSignupPage ? 'Create Account' : 'Sign In'}{' '}
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          height='20px'
-          viewBox='0 -960 960 960'
-          width='20px'
-          fill='#e3e3e3'
-          className='group-hover:translate-x-1 transition-transform'
-        >
-          <path d='M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z' />
-        </svg>
+        {/* If user data if validating display loading icon */}
+        {isAuthLoading ? (
+          <LoadingSvg />
+        ) : isSignupPage ? (
+          'Create Account'
+        ) : (
+          'Sign In'
+        )}{' '}
+        {!isAuthLoading && (
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            height='20px'
+            viewBox='0 -960 960 960'
+            width='20px'
+            fill='#e3e3e3'
+            className='group-hover:translate-x-1 transition-transform'
+          >
+            <path d='M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z' />
+          </svg>
+        )}
       </button>
     </form>
+  );
+}
+
+function LoadingSvg() {
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      height='24px'
+      viewBox='0 -960 960 960'
+      width='24px'
+      fill='#e3e3e3'
+      className='animate-spin'
+    >
+      <path d='M325-111.5q-73-31.5-127.5-86t-86-127.5Q80-398 80-480.5t31.5-155q31.5-72.5 86-127t127.5-86Q398-880 480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480.5-80Q398-80 325-111.5Z' />
+    </svg>
   );
 }
