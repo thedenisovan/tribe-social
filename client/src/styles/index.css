@@ -7,6 +7,10 @@
   --jakarta: 'Plus Jakarta Sans', 'Roboto', 'Bubblegum Sans';
 }
 
+.sidebar {
+  --cui-sidebar-width: 0;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 .form-input {

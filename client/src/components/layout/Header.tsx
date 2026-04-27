@@ -13,10 +13,8 @@ export default function Header() {
   const dashContext = useContext(DashContext);
   const themeContext = useContext(ThemeContext);
 
-  // console.log(document.title.split('|')[1]);
-
   return (
-    <header className='sticky top-0 pt-5 px-5 md:pb-2 pb-3 flex items-center border-b border-b-neutral-300 dark:border-b-neutral-700 justify-between'>
+    <header className='sticky top-0 z-100000 bg-theme py-2! px-2 md:py-0! flex items-center border-b border-b-neutral-300 dark:border-b-neutral-700 justify-between'>
       <div className='flex items-center gap-3 md:gap-10'>
         <div className='flex items-center'>
           <div className='w-10 md:w-18'>

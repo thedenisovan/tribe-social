@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import type { Decoded } from '../../types/auth';
 import DashContext from '../../context/DashContext';
 import { useEffect } from 'react';
+import { NarrowSidebar } from '../../components/layout/Sidebar';
 
 export default function Dashboard() {
   const { isLoading, error, data } = useFetch<Decoded>('dashboard/getUserData');
@@ -31,15 +32,18 @@ export default function Dashboard() {
   autoSignOut();
   return (
     <main
-      className={`flex flex-col bg-theme min-h-screen ${isLoading ? 'items-center justify-center' : ''}`}
+      className={`flex flex-col relative! bg-theme min-h-screen ${isLoading ? 'items-center justify-center' : ''}`}
     >
       <DashContext value={data}>
         {!isLoading ? (
           <>
             <Header />
-            <div className='flex justify-between h-screen'>
-              <aside>left aside</aside>
-              <Outlet />
+            <div className='flex relative! justify-between h-screen'>
+              <NarrowSidebar />
+
+              <div className='ml-22!'>
+                <Outlet />
+              </div>
               <aside>right aside</aside>
             </div>
           </>
