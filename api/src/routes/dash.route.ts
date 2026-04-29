@@ -13,7 +13,7 @@ dashRoute.get('/getUserData', verifyToken, (req, res, next) => {
     // Remove hashed password from user obj
     const { hashedPassword, ...clone } = req.user as User;
 
-    return res.json({ user: clone });
+    return res.json({ decoded: clone });
   } catch (e) {
     next(e);
   }
