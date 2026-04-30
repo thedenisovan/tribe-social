@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import type { Decoded } from '../../types/auth';
 import DashContext, { CurrentPageContext } from '../../context/DashContext';
 import { useEffect, useState } from 'react';
-import { NarrowSidebar } from '../../components/layout/NavSidebar';
+import Sidebar from '../../components/layout/NavSidebar';
 
 export default function Dashboard() {
   const { isLoading, error, data } = useFetch<Decoded>('dashboard/getUserData');
@@ -41,11 +41,10 @@ export default function Dashboard() {
             <>
               <Header />
               <div className='flex justify-between h-screen'>
-                <NarrowSidebar />
-                <div className='ml-22!'>
+                <Sidebar />
+                <div className='ml-15! md:ml-35! lg:ml-53!'>
                   <Outlet />
                 </div>
-                <aside>right aside</aside>
               </div>
             </>
           ) : (

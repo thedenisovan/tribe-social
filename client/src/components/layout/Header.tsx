@@ -15,7 +15,7 @@ export default function Header() {
   const themeContext = useContext(ThemeContext);
 
   return (
-    <header className='sticky top-0 z-100000 bg-theme py-3! px-2 md:pb-2! md:pt-4! flex items-center border-b border-b-neutral-300 dark:border-b-neutral-700 justify-between'>
+    <header className='sticky top-0 z-100000 bg-theme py-3! px-2 md:pb-2! md:pt-4! flex items-center border-b border-b-neutral-200 dark:border-b-neutral-800 justify-between'>
       <div className='flex items-center gap-3 md:gap-10'>
         <div className='flex items-center'>
           <div className='w-10 md:w-12'>
