@@ -40,9 +40,9 @@ export default function Dashboard() {
           {!isLoading ? (
             <>
               <Header />
-              <div className='flex justify-between h-screen'>
+              <div className='flex justify-between h-[calc(100vh-65px)] md:h-[calc(100vh-73px)]'>
                 <Sidebar />
-                <div className='ml-15! md:ml-35! lg:ml-53!'>
+                <div className='ml-16.5! md:ml-35.5! lg:ml-50!'>
                   <Outlet />
                 </div>
               </div>

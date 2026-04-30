@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
+import useSetCurrentPage from '../../../hooks/useSetCurrentPage';
 
 export default function Discover() {
   useEffect(() => {
     document.title = 'Tribe Social | Settings';
   });
+
+  useSetCurrentPage('Settings');
 
   return (
     <main>
