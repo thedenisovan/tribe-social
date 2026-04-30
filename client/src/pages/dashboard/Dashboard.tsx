@@ -3,11 +3,13 @@ import Header from '../../components/layout/Header';
 import useFetch from '../../hooks/useFetch';
 import { useNavigate } from 'react-router';
 import type { Decoded } from '../../types/auth';
-import DashContext from '../../context/DashContext';
-import { useEffect } from 'react';
+import DashContext, { CurrentPageContext } from '../../context/DashContext';
+import { useEffect, useState } from 'react';
+import { NarrowSidebar } from '../../components/layout/NavSidebar';
 
 export default function Dashboard() {
   const { isLoading, error, data } = useFetch<Decoded>('dashboard/getUserData');
+  const [currentPage, setCurrentPage] = useState<string>('Home');
   const nav = useNavigate();
 
   // If error happens durning fetch navigate user to error page and sign him out
@@ -34,20 +36,22 @@ export default function Dashboard() {
       className={`flex flex-col bg-theme min-h-screen ${isLoading ? 'items-center justify-center' : ''}`}
     >
       <DashContext value={data}>
-        {!isLoading ? (
-          <>
-            <Header />
-            <div className='flex justify-between h-screen'>
-              left aside
-              <div className='ml-22!'>
-                <Outlet />
+        <CurrentPageContext value={{ currentPage, setCurrentPage }}>
+          {!isLoading ? (
+            <>
+              <Header />
+              <div className='flex justify-between h-screen'>
+                <NarrowSidebar />
+                <div className='ml-22!'>
+                  <Outlet />
+                </div>
+                <aside>right aside</aside>
               </div>
-              <aside>right aside</aside>
-            </div>
-          </>
-        ) : (
-          <div>Loading</div>
-        )}
+            </>
+          ) : (
+            <div>Loading</div>
+          )}
+        </CurrentPageContext>
       </DashContext>
     </main>
   );

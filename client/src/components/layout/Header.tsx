@@ -1,4 +1,4 @@
-import DashContext from '../../context/DashContext';
+import DashContext, { CurrentPageContext } from '../../context/DashContext';
 import ThemeContext from '../../context/ThemeContext';
 import useTokenVerify from '../../hooks/useTokenVerify';
 import * as logo from '../../pages/auth/components/Logo';
@@ -11,6 +11,7 @@ import { Link } from 'react-router';
 export default function Header() {
   useTokenVerify();
   const dashContext = useContext(DashContext);
+  const currPageContext = useContext(CurrentPageContext);
   const themeContext = useContext(ThemeContext);
 
   return (
@@ -26,7 +27,7 @@ export default function Header() {
           </h1>
         </div>
         <p className='dark:text-[#B7B7B7] text-[#666666] font-bold text-sm md:text-sm '>
-          dashboard /{document.title.split('|')[1]}
+          dashboard / {currPageContext?.currentPage}
         </p>
       </div>
       <div className='flex gap-3 items-center'>
