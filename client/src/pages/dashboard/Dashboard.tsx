@@ -2,14 +2,17 @@ import { Outlet } from 'react-router';
 import Header from '../../components/layout/Header';
 import useFetch from '../../hooks/useFetch';
 import { useNavigate } from 'react-router';
-import type { Decoded } from '../../types/auth';
+import type { Decoded, PostData } from '../../types/auth';
 import DashContext, { CurrentPageContext } from '../../context/DashContext';
 import { useEffect, useState } from 'react';
 import Sidebar from '../../components/layout/NavSidebar';
 
 export default function Dashboard() {
+  // Decoded user data
   const { isLoading, error, data } = useFetch<Decoded>('dashboard/getUserData');
+
   const [currentPage, setCurrentPage] = useState<string>('Home');
+  const [userPosts, setUserPosts] = useState<PostData[] | []>([]);
   const nav = useNavigate();
 
   // If error happens durning fetch navigate user to error page and sign him out
@@ -35,7 +38,7 @@ export default function Dashboard() {
     <main
       className={`flex flex-col bg-theme min-h-screen ${isLoading ? 'items-center justify-center' : ''}`}
     >
-      <DashContext value={data}>
+      <DashContext value={{ decoded: data, userPosts, setUserPosts }}>
         <CurrentPageContext value={{ currentPage, setCurrentPage }}>
           {!isLoading ? (
             <>

@@ -3,27 +3,51 @@ import { useContext } from 'react';
 import DashContext from '../../../context/DashContext';
 import { LightIcon, DarkIcon } from '../../../components/common/ThemeIcons';
 import useSetCurrentPage from '../../../hooks/useSetCurrentPage';
-import type { User } from '../../../types/auth';
+import type { PostData, User } from '../../../types/auth';
 import PostCard from '../../../components/common/PostCard';
+import useFetch from '../../../hooks/useFetch';
+import { useNavigate } from 'react-router';
 
 export default function Profile() {
-  const dashContext = useContext(DashContext);
+  const user = useContext(DashContext)?.decoded.decoded.user;
+  const userPostContext = useContext(DashContext);
+  const nav = useNavigate();
 
-  const user = dashContext?.decoded.user;
+  // User posts
+  const { isLoading, error, data } = useFetch<PostData[] | []>(
+    `dashboard/profile/getUserPosts/${user?.id || 0}`,
+  );
 
   useEffect(() => {
     document.title = 'Tribe Social | Profile';
-  });
+
+    if (error) {
+      nav('/error');
+    }
+
+    const updateUserPosts = () => {
+      userPostContext?.setUserPosts(data || []);
+    };
+
+    updateUserPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, data, nav]);
 
   useSetCurrentPage('Profile');
 
-  if (user)
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
+  if (user && userPostContext)
     return (
       <main>
-        <ProfileHeader user={user} />
-        <ProfileSubHeader user={user} />
-        <ul className=''>
-          {user.posts.map((post) => (
+        <div className='m-5! profile-header-w rounded-xl border dark:border-neutral-600'>
+          <ProfileHeader user={user} />
+        </div>
+        <h3 className='mx-5! mt-7! font-bold text-2xl'>Posts</h3>
+        <ul className='m-5!'>
+          {userPostContext.userPosts.map((post) => (
             <li key={post.id}>
               <PostCard
                 firstName={user.firstName}
@@ -31,6 +55,10 @@ export default function Profile() {
                 email={user.email}
                 date={post.createdAt}
                 content={post.postData}
+                authorId={post.authorId}
+                currUserId={user.id}
+                postId={post.id}
+                setUserPosts={userPostContext.setUserPosts}
               />
             </li>
           ))}
@@ -41,22 +69,27 @@ export default function Profile() {
 
 function ProfileHeader({ user }: { user: User }) {
   return (
-    <header className='bg-linear-to-br from-purple-900 to-purple-700 h-34 relative profile-header-w'>
-      <div className='absolute flex justify-center h-25 w-25 -bottom-8 left-5 border-4 border-white dark:border-black rounded-full p-3 bg-linear-to-bl from-purple-600 to-purple-400 '>
-        <p className='text-4xl flex items-center font-bold text-white'>
-          {user.firstName[0].toUpperCase()}
-        </p>
-        <p className='text-4xl flex items-center font-bold text-white'>
-          {user.lastName[0].toUpperCase()}
-        </p>
-      </div>
-    </header>
+    <>
+      <header className='rounded-t-xl bg-linear-to-br from-purple-900 to-purple-700 h-34 relative'>
+        <div className='absolute flex justify-center h-25 w-25 -bottom-8 left-5 border-4 border-white dark:border-black rounded-full p-3 bg-linear-to-bl from-purple-600 to-purple-400 '>
+          <p className='text-4xl flex items-center font-bold text-white'>
+            {user.firstName[0].toUpperCase()}
+          </p>
+          <p className='text-4xl flex items-center font-bold text-white'>
+            {user.lastName[0].toUpperCase()}
+          </p>
+        </div>
+      </header>
+      <ProfileSubHeader user={user} />
+    </>
   );
 }
 
 function ProfileSubHeader({ user }: { user: User }) {
+  const userPostContext = useContext(DashContext);
+
   return (
-    <section className='mt-10! pl-6'>
+    <section className='mt-10! flex flex-col gap-2 pl-6 pb-4'>
       <div className='flex gap-2 font-medium'>
         <p className=' flex items-center'>{user.firstName}</p>
         <p className=' flex items-center'>{user.lastName}</p>
@@ -64,7 +97,21 @@ function ProfileSubHeader({ user }: { user: User }) {
       <p className='text-sm text-neutral-600 dark:text-neutral-400'>
         @{user.email}
       </p>
-      <p className='pt-2 text-sm'>{user.bio || ''}</p>
+      <p className={`pt-2 text-sm ${user.bio ? '' : 'hidden'}`}>{user.bio}</p>
+      <ul className='flex gap-3'>
+        <li className='flex gap-1 items-center'>
+          <p className='font-bold'>{userPostContext?.userPosts.length}</p>
+          <p className='text-sm'>Posts</p>
+        </li>
+        {/* <li className='flex gap-1 items-center'>
+          <p className='font-bold'>{user.follower.length}</p>
+          <p className='text-sm'>Followers</p>
+        </li>
+        <li className='flex gap-1 items-center'>
+          <p className='font-bold'>{user.following.length}</p>
+          <p className='text-sm'>Following</p>
+        </li> */}
+      </ul>
       <div className='flex items-center gap-1'>
         <DarkIcon
           fill='#666666'

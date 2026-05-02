@@ -13,6 +13,7 @@ export default function Header() {
   const dashContext = useContext(DashContext);
   const currPageContext = useContext(CurrentPageContext);
   const themeContext = useContext(ThemeContext);
+  const user = dashContext?.decoded.decoded.user;
 
   return (
     <header className='sticky top-0 z-100000 bg-theme py-3! px-2 md:pb-2! md:pt-4! flex items-center border-b border-b-neutral-200 dark:border-b-neutral-800 justify-between'>
@@ -44,10 +45,10 @@ export default function Header() {
           <UserBubble />
           <div className='flex gap-1'>
             <p className='hidden md:block lg:text-lg'>
-              {dashContext?.decoded.user.firstName}
+              {user && user.firstName}
             </p>
             <p className='hidden md:block lg:text-lg'>
-              {dashContext?.decoded.user.lastName}
+              {user && user.lastName}
             </p>
           </div>
           <Link

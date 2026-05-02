@@ -26,7 +26,7 @@ export interface User {
   savedPosts: PostData[];
 }
 
-interface PostData {
+export interface PostData {
   authorId: number;
   createdAt: string;
   id: number;

@@ -1,12 +1,18 @@
 import { createContext } from 'react';
-import type { Decoded } from '../types/auth';
+import type { Decoded, PostData } from '../types/auth';
 
 interface CurrentPageContextType {
   currentPage: string;
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const DashContext = createContext<Decoded | null>(null);
+interface ApiDataContext {
+  decoded: Decoded;
+  userPosts: PostData[] | [];
+  setUserPosts: React.Dispatch<React.SetStateAction<PostData[] | []>>;
+}
+
+const DashContext = createContext<ApiDataContext | null>(null);
 const CurrentPageContext = createContext<CurrentPageContextType | null>(null);
 
 export { CurrentPageContext };

@@ -1,4 +1,7 @@
 import { isToday, differenceInDays, differenceInYears } from 'date-fns';
+import ICONS from '../../constants/icons';
+import deletePost from '../../services/deletePost.client';
+import type { PostData } from '../../types/auth';
 
 export default function PostCard({
   firstName,
@@ -7,6 +10,10 @@ export default function PostCard({
   date,
   content,
   profileUrl,
+  authorId,
+  currUserId,
+  postId,
+  setUserPosts,
 }: {
   firstName: string;
   lastName: string;
@@ -14,38 +21,62 @@ export default function PostCard({
   date: string;
   content: string;
   profileUrl?: string;
+  authorId: number;
+  currUserId: number;
+  postId: number;
+  setUserPosts: React.Dispatch<React.SetStateAction<PostData[] | []>>;
 }) {
   return (
-    <div className='border dark:bg-neutral-600/20 dark:border-neutral-600 p-3 my-4! mx-2! rounded-xl'>
+    <div className='border dark:bg-neutral-600/20 dark:border-neutral-600 p-3 my-4!  rounded-xl'>
       <main>
-        <header className='flex gap-1 items-center'>
-          <aside>
-            {profileUrl ? (
-              profileUrl
-            ) : (
-              <div className='flex md:h-10 md:w-10 items-center justify-center bg-linear-to-br from-purple-500 to-pink-500 p-1 rounded-full '>
-                <p className='text-sm text-white'>
-                  {firstName[0].toUpperCase()}
-                </p>
-                <p className='text-sm text-white'>
-                  {lastName[0].toUpperCase()}
+        <header className='flex justify-between'>
+          <div className='flex gap-1 items-center'>
+            <aside>
+              {profileUrl ? (
+                profileUrl
+              ) : (
+                <div className='flex md:h-10 md:w-10 items-center justify-center bg-linear-to-br from-purple-500 to-pink-500 p-1 rounded-full '>
+                  <p className='text-sm text-white'>
+                    {firstName[0].toUpperCase()}
+                  </p>
+                  <p className='text-sm text-white'>
+                    {lastName[0].toUpperCase()}
+                  </p>
+                </div>
+              )}
+            </aside>
+            <div>
+              <h2 className='flex gap-1'>
+                <span className='font-medium'>{firstName}</span>
+                <span className='font-medium'>{lastName}</span>
+              </h2>
+              <div className='flex gap-1 items-center'>
+                <p className='text-[13px] dark:text-neutral-300'>@{email}</p>
+                {'•'}
+                <p className='text-[13px] dark:text-neutral-300'>
+                  {formatPostDate(date)}
                 </p>
               </div>
-            )}
-          </aside>
-          <div>
-            <h2 className='flex gap-1'>
-              <span className='font-medium'>{firstName}</span>
-              <span className='font-medium'>{lastName}</span>
-            </h2>
-            <div className='flex gap-1 items-center'>
-              <p className='text-[13px] dark:text-neutral-300'>@{email}</p>
-              {'•'}
-              <p className='text-[13px] dark:text-neutral-300'>
-                {formatPostDate(date)}
-              </p>
             </div>
           </div>
+          <button
+            onClick={async () => {
+              const posts = await deletePost(postId, authorId);
+
+              setUserPosts(posts);
+            }}
+            className={`${authorId === currUserId ? '' : 'hidden'} transition-colors cursor-pointer hover:bg-red-500/50 rounded-full h-7 w-7 flex items-center justify-center`}
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              height='24px'
+              viewBox='0 -960 960 960'
+              width='24px'
+              fill='#999999'
+            >
+              <path d={ICONS.delete} />
+            </svg>
+          </button>
         </header>
 
         <p className='mt-5!'>{content}</p>

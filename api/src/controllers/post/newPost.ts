@@ -29,11 +29,11 @@ export default async function newPost(
     }
 
     // Create new post
-    await prismaNeon.post.create({
+    const newPost = await prismaNeon.post.create({
       data: { postData: postData.trim(), authorId: authorIntId },
     });
 
-    return res.status(201);
+    return res.status(201).json(newPost);
   } catch (e) {
     next(e);
   }

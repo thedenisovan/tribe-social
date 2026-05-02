@@ -6,6 +6,7 @@ import dashRoute from './routes/dash.route.js';
 import homeRoute from './routes/home.route.js';
 import passport from 'passport';
 import './configs/passport.js';
+import profileRoute from './routes/profile.route.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(passport.initialize());
 
 app.use('/auth', authRoute);
 app.use('/dashboard/home', homeRoute);
+app.use('/dashboard/profile', profileRoute);
 app.use('/dashboard', dashRoute);
 
 //* Register error handler middleware

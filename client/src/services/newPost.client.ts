@@ -1,6 +1,7 @@
 import URL from '../constants/url';
 
 export default async function newPost(postData: string, authorId: number) {
+  // Validate input data
   if (!authorId || !postData || isNaN(authorId)) {
     throw new Error('No user id or post data provided.');
   }
@@ -17,6 +18,7 @@ export default async function newPost(postData: string, authorId: number) {
     throw new Error('Could not extract token from local storage.');
   }
 
+  // New post
   try {
     const response = await fetch(`${URL.baseURL}dashboard/home/newPost`, {
       method: 'POST',
@@ -32,6 +34,10 @@ export default async function newPost(postData: string, authorId: number) {
         `Error status: ${response.status}, error message: ${await response.text()}`,
       );
     }
+
+    const result = await response.json();
+
+    return result;
   } catch (e) {
     if (e instanceof Error) {
       throw new Error(`Error msg: ${e.message}`);
