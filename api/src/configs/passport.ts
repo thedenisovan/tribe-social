@@ -14,6 +14,12 @@ async function verifyCallback(
   try {
     const user = await prismaNeon.user.findUnique({
       where: { email },
+      include: {
+        posts: true,
+        follower: true,
+        following: true,
+        savedPosts: true,
+      },
     });
 
     if (!user) {

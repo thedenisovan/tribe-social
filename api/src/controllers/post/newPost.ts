@@ -10,9 +10,9 @@ export default async function newPost(
   try {
     const { postData, authorId } = req.body;
 
-    const authorIdInt = Number(authorId);
+    const authorIntId = Number(authorId);
 
-    if (!postData || !authorIdInt || isNaN(authorIdInt)) {
+    if (!postData || !authorIntId || isNaN(authorIntId)) {
       return next(
         new HttpError(
           `No or incorrect values were provided for request body.`,
@@ -29,11 +29,11 @@ export default async function newPost(
     }
 
     // Create new post
-    const post = await prismaNeon.post.create({
-      data: { postData: postData.trim(), authorId },
+    await prismaNeon.post.create({
+      data: { postData: postData.trim(), authorId: authorIntId },
     });
 
-    return res.status(201).json({ post });
+    return res.status(201);
   } catch (e) {
     next(e);
   }
