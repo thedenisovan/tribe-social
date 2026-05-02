@@ -10,7 +10,7 @@ export interface Decoded {
   decoded: { user: User; iat: number; exp: number };
 }
 
-interface User {
+export interface User {
   id: number;
   firstName: string;
   lastName: string;
@@ -20,4 +20,16 @@ interface User {
   registeredAt?: string;
   avatarUrl?: string;
   isOnline: boolean;
+  posts: PostData[];
+  follower: User[];
+  following: User[];
+  savedPosts: PostData[];
+}
+
+interface PostData {
+  authorId: number;
+  createdAt: string;
+  id: number;
+  postData: string;
+  postMediaUrl: string | null;
 }

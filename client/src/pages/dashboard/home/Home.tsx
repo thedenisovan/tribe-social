@@ -28,7 +28,6 @@ export default function Home() {
           ></textarea>
           <button
             onClick={() => {
-              console.log({ postData, id: dashContext?.decoded.user.id });
               if (dashContext) {
                 newPost(postData, dashContext?.decoded.user.id);
               }

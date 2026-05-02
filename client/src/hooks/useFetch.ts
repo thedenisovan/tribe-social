@@ -15,6 +15,7 @@ export default function useFetch<T>(url: string) {
         const response = await fetch(`${URL.baseURL}${url}`, {
           headers: {
             authorization: 'Bearer ' + token,
+            'Content-Type': 'application/json',
           },
         });
 

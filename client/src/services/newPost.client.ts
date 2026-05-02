@@ -32,10 +32,6 @@ export default async function newPost(postData: string, authorId: number) {
         `Error status: ${response.status}, error message: ${await response.text()}`,
       );
     }
-
-    const result = await response.json();
-
-    console.log(result);
   } catch (e) {
     if (e instanceof Error) {
       throw new Error(`Error msg: ${e.message}`);

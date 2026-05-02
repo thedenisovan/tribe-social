@@ -40,7 +40,7 @@ export default function Dashboard() {
           {!isLoading ? (
             <>
               <Header />
-              <div className='flex justify-between h-[calc(100vh-65px)] md:h-[calc(100vh-73px)]'>
+              <div className='flex justify-between min-h-[calc(100vh-65px)] md:min-h-[calc(100vh-73px)]'>
                 <Sidebar />
                 <div className='ml-16.5! md:ml-35.5! lg:ml-50!'>
                   <Outlet />

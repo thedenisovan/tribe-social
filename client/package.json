@@ -15,6 +15,7 @@
     "@coreui/icons-react": "^2.3.0",
     "@coreui/react": "^5.10.0",
     "@tailwindcss/vite": "^4.2.2",
+    "date-fns": "^4.1.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router": "^7.14.0",
