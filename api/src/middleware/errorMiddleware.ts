@@ -9,3 +9,11 @@ export default function errorHandler(
   console.error(err.stack);
   res.status(500).json({ error: 'Internal Server Error' });
 }
+
+export class HttpError extends Error {
+  statusCode: number;
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
