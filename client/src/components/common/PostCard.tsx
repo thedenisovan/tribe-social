@@ -27,7 +27,7 @@ export default function PostCard({
   setUserPosts: React.Dispatch<React.SetStateAction<Post[] | []>>;
 }) {
   return (
-    <div className='border dark:bg-neutral-600/20 dark:border-neutral-600 p-3 my-4!  rounded-xl'>
+    <div className='border dark:bg-neutral-600/20 dark:border-neutral-600 border-neutral-300 p-3 my-4!  rounded-xl'>
       <main>
         <header className='flex justify-between'>
           <div className='flex gap-1 items-center'>

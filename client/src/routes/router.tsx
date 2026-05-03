@@ -7,6 +7,7 @@ import Settings from '../pages/dashboard/settings/Settings';
 import Profile from '../pages/dashboard/profile/Profile';
 import Discover from '../pages/dashboard/discover/Discover';
 import Dashboard from '../pages/dashboard/Dashboard';
+import Notifications from '../pages/dashboard/notifications/Notifications';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
           {
             path: 'discover',
             Component: Discover,
+          },
+          {
+            path: 'notifications',
+            Component: Notifications,
           },
         ],
       },
