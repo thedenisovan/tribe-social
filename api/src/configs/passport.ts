@@ -22,7 +22,7 @@ async function verifyCallback(
     const isPassValid = await bcrypt.compare(password, user.hashedPassword);
 
     if (isPassValid) {
-      return done(null, user);
+      return done(null, user.id);
     } else {
       return done(null, false);
     }

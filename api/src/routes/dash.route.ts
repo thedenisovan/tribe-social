@@ -6,7 +6,7 @@ import prismaNeon from '../db/prisma.js';
 
 const dashRoute = Router();
 
-dashRoute.get('/getUserData', verifyToken, (req, res, next) => {
+dashRoute.get('/getUserId', verifyToken, (req, res, next) => {
   try {
     if (!req.user) {
       return next(new Error('Could not extract user object from request.'));

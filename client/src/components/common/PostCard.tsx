@@ -1,7 +1,7 @@
 import { isToday, differenceInDays, differenceInYears } from 'date-fns';
 import ICONS from '../../constants/icons';
 import deletePost from '../../services/deletePost.client';
-import type { PostData } from '../../types/auth';
+import type { Post } from '../../types/auth';
 
 export default function PostCard({
   firstName,
@@ -24,7 +24,7 @@ export default function PostCard({
   authorId: number;
   currUserId: number;
   postId: number;
-  setUserPosts: React.Dispatch<React.SetStateAction<PostData[] | []>>;
+  setUserPosts: React.Dispatch<React.SetStateAction<Post[] | []>>;
 }) {
   return (
     <div className='border dark:bg-neutral-600/20 dark:border-neutral-600 p-3 my-4!  rounded-xl'>
@@ -50,7 +50,7 @@ export default function PostCard({
                 <span className='font-medium'>{firstName}</span>
                 <span className='font-medium'>{lastName}</span>
               </h2>
-              <div className='flex gap-1 items-center'>
+              <div className='flex gap-1 items-center flex-wrap'>
                 <p className='text-[13px] dark:text-neutral-300'>@{email}</p>
                 {'•'}
                 <p className='text-[13px] dark:text-neutral-300'>
@@ -92,8 +92,8 @@ function formatPostDate(date: string | Date) {
 
   const days = differenceInDays(new Date(), d);
 
-  if (days < 365) return `${days}d`;
+  if (days < 365) return `${days + 1}d`;
 
   const years = differenceInYears(new Date(), d);
-  return `${years}y`;
+  return `${years + 1}y`;
 }

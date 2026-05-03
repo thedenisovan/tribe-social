@@ -3,62 +3,40 @@ import { useContext } from 'react';
 import DashContext from '../../../context/DashContext';
 import { LightIcon, DarkIcon } from '../../../components/common/ThemeIcons';
 import useSetCurrentPage from '../../../hooks/useSetCurrentPage';
-import type { PostData, User } from '../../../types/auth';
+import type { FullUser } from '../../../types/auth';
 import PostCard from '../../../components/common/PostCard';
-import useFetch from '../../../hooks/useFetch';
-import { useNavigate } from 'react-router';
 
 export default function Profile() {
-  const user = useContext(DashContext)?.decoded.decoded.user;
-  const userPostContext = useContext(DashContext);
-  const nav = useNavigate();
-
-  // User posts
-  const { isLoading, error, data } = useFetch<PostData[] | []>(
-    `dashboard/profile/getUserPosts/${user?.id || 0}`,
-  );
+  const user = useContext(DashContext);
 
   useEffect(() => {
     document.title = 'Tribe Social | Profile';
-
-    if (error) {
-      nav('/error');
-    }
-
-    const updateUserPosts = () => {
-      userPostContext?.setUserPosts(data || []);
-    };
-
-    updateUserPosts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error, data, nav]);
+  });
 
   useSetCurrentPage('Profile');
 
-  if (isLoading) {
-    return <div>Loading</div>;
-  }
+  // console.log(d?.posts);
 
-  if (user && userPostContext)
+  if (user?.fullUser && user)
     return (
       <main>
         <div className='m-5! profile-header-w rounded-xl border dark:border-neutral-600'>
-          <ProfileHeader user={user} />
+          <ProfileHeader user={user?.fullUser} />
         </div>
         <h3 className='mx-5! mt-7! font-bold text-2xl'>Posts</h3>
         <ul className='m-5!'>
-          {userPostContext.userPosts.map((post) => (
+          {user.userPosts.map((post) => (
             <li key={post.id}>
               <PostCard
-                firstName={user.firstName}
-                lastName={user.lastName}
-                email={user.email}
+                firstName={user.fullUser?.firstName || 'John'}
+                lastName={user.fullUser?.lastName || 'Doe'}
+                email={user.fullUser?.email || 'johnDOe@gmail.com'}
                 date={post.createdAt}
                 content={post.postData}
                 authorId={post.authorId}
-                currUserId={user.id}
+                currUserId={user.fullUser?.id || 0}
                 postId={post.id}
-                setUserPosts={userPostContext.setUserPosts}
+                setUserPosts={user.setUserPosts}
               />
             </li>
           ))}
@@ -67,7 +45,7 @@ export default function Profile() {
     );
 }
 
-function ProfileHeader({ user }: { user: User }) {
+function ProfileHeader({ user }: { user: FullUser }) {
   return (
     <>
       <header className='rounded-t-xl bg-linear-to-br from-purple-900 to-purple-700 h-34 relative'>
@@ -85,9 +63,7 @@ function ProfileHeader({ user }: { user: User }) {
   );
 }
 
-function ProfileSubHeader({ user }: { user: User }) {
-  const userPostContext = useContext(DashContext);
-
+function ProfileSubHeader({ user }: { user: FullUser }) {
   return (
     <section className='mt-10! flex flex-col gap-2 pl-6 pb-4'>
       <div className='flex gap-2 font-medium'>
@@ -100,7 +76,7 @@ function ProfileSubHeader({ user }: { user: User }) {
       <p className={`pt-2 text-sm ${user.bio ? '' : 'hidden'}`}>{user.bio}</p>
       <ul className='flex gap-3'>
         <li className='flex gap-1 items-center'>
-          <p className='font-bold'>{userPostContext?.userPosts.length}</p>
+          <p className='font-bold'>{user?.posts.length}</p>
           <p className='text-sm'>Posts</p>
         </li>
         {/* <li className='flex gap-1 items-center'>

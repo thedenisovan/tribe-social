@@ -13,7 +13,7 @@ export default function Header() {
   const dashContext = useContext(DashContext);
   const currPageContext = useContext(CurrentPageContext);
   const themeContext = useContext(ThemeContext);
-  const user = dashContext?.decoded.decoded.user;
+  const user = dashContext?.fullUser;
 
   return (
     <header className='sticky top-0 z-100000 bg-theme py-3! px-2 md:pb-2! md:pt-4! flex items-center border-b border-b-neutral-200 dark:border-b-neutral-800 justify-between'>

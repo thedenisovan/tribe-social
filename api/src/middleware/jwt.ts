@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import type User from '../types/user.js';
 import 'dotenv/config';
 const secret = process.env.JWT_SECRET_KEY as string;
 
@@ -9,7 +8,7 @@ export default function generateJwtToken(
   res: Response,
   next: NextFunction,
 ) {
-  const user = req.user as User;
+  const user = req.user;
 
   if (!user) {
     throw new Error(`Could not get user data from request object.`);

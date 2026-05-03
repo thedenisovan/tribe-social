@@ -3,7 +3,7 @@ import { useContext } from 'react';
 
 export default function UserBubble() {
   const dashContext = useContext(DashContext);
-  const user = dashContext?.decoded.decoded.user;
+  const user = dashContext?.fullUser;
 
   return (
     <div className='flex  md:h-10 md:w-10 items-center justify-center bg-linear-to-br from-purple-500 to-pink-500 p-1 rounded-full '>

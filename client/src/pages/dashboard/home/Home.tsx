@@ -6,7 +6,6 @@ import DashContext from '../../../context/DashContext';
 export default function Home() {
   const [postData, setPostData] = useState<string>('');
   const dashContext = useContext(DashContext);
-  const user = dashContext?.decoded.decoded.user;
 
   useEffect(() => {
     document.title = 'Tribe Social | Home';
@@ -29,9 +28,9 @@ export default function Home() {
           ></textarea>
           <button
             onClick={async () => {
-              if (user) {
+              if (dashContext && dashContext.fullUser) {
                 // Create new post and add it to dash context of user posts
-                const post = await newPost(postData, user.id);
+                const post = await newPost(postData, dashContext.fullUser.id);
 
                 dashContext.setUserPosts((posts) => [...posts, post]);
               }
