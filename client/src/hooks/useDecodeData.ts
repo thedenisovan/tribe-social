@@ -22,6 +22,7 @@ export default function useDecodedData() {
     }
   }, [uid, dataId]);
 
+  // Return first one which still is loading or first error
   return {
     isLoading: loadingId || isLoading,
     error: errorId || error,

@@ -85,6 +85,7 @@ export default function PostCard({
   );
 }
 
+// Display how old is post
 function formatPostDate(date: string | Date) {
   const d = new Date(date);
 

@@ -9,8 +9,17 @@ export default function Discover() {
   useSetCurrentPage('Discover');
 
   return (
-    <main>
-      <h2>this is discover</h2>
+    <main className='m-5! main-w '>
+      <header className='border'>
+        <h2>this is discover</h2>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <input
+            type='search'
+            name='userSearch'
+            placeholder='Search users...'
+          />
+        </form>
+      </header>
     </main>
   );
 }

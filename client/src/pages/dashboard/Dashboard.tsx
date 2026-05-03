@@ -63,6 +63,7 @@ export default function Dashboard() {
                 <div className='ml-16.5! md:ml-40! lg:ml-70!'>
                   <Outlet />
                 </div>
+                <div className='fixed h-[50%] right-0  hidden md:block border min-w-50 dark:border-neutral-500 mr-5!'></div>
               </div>
             </>
           ) : (

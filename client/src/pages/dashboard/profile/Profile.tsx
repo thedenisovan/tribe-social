@@ -20,8 +20,8 @@ export default function Profile() {
 
   if (user?.fullUser && user)
     return (
-      <main>
-        <div className='m-5! profile-header-w rounded-xl border border-neutral-300 dark:border-neutral-600'>
+      <main className='main-w '>
+        <div className='m-5! rounded-xl border border-neutral-300 dark:border-neutral-600'>
           <ProfileHeader user={user?.fullUser} />
         </div>
         <div className='grid grid-cols-2 border m-5! border-neutral-300 dark:border-neutral-600 rounded-2xl'>

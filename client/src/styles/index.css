@@ -12,8 +12,8 @@
 .posts-button {
   @apply dark:bg-purple-400/5 bg-purple-400/10 border-b text-purple-600 transition-colors dark:text-purple-400 border-purple-700;
 }
-.profile-header-w {
-  @apply w-[calc(100vw-6.6rem)] md:w-[calc(100vw-14rem)] lg:w-[calc(100vw-21rem)];
+.main-w {
+  @apply w-[calc(100vw-6.6rem)] md:w-[calc(100vw-23.1rem)] lg:w-[calc(100vw-31.5rem)];
 }
 .form-input {
   @apply border-neutral-300 dark:border-neutral-700 border p-2.5 mt-1! dark:text-neutral-200 rounded-xl text-neutral-900;
