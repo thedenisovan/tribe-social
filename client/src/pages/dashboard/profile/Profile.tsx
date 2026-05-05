@@ -21,29 +21,51 @@ export default function Profile() {
   if (user?.fullUser && user)
     return (
       <main className='main-w '>
-        <div className='m-5! rounded-xl border border-neutral-300 dark:border-neutral-600'>
-          <ProfileHeader user={user?.fullUser} />
-        </div>
-        <div className='grid grid-cols-2 border m-5! border-neutral-300 dark:border-neutral-600 rounded-2xl'>
-          <button
-            onClick={() => setIsUserPosts(true)}
-            className={`cursor-pointer ${isUserPosts ? 'posts-button rounded-tl-2xl rounded-bl-2xl' : ''}`}
-          >
-            <h3 className='my-3! font-medium text-md'>Posts</h3>
-          </button>{' '}
-          <button
-            onClick={() => setIsUserPosts(false)}
-            className={`cursor-pointer ${!isUserPosts ? 'posts-button rounded-tr-2xl rounded-br-2xl' : ''}`}
-          >
-            <h3 className='my-3! font-medium text-md'>Saved posts</h3>
-          </button>
-        </div>
-        {/* If user posts state is true then display posts made by user- */}
-        {/* -else user posts state is false display user saved posts */}
-        {isUserPosts ? (
-          user.userPosts.length ? (
+        <div className='lg:max-w-250 lg:mx-auto!'>
+          <div className='m-5! rounded-xl border border-neutral-300 dark:border-neutral-600'>
+            <ProfileHeader user={user?.fullUser} />
+          </div>
+          <div className='grid grid-cols-2 border m-5! border-neutral-300 dark:border-neutral-600 rounded-2xl'>
+            <button
+              onClick={() => setIsUserPosts(true)}
+              className={`cursor-pointer ${isUserPosts ? 'posts-button rounded-tl-2xl rounded-bl-2xl' : ''}`}
+            >
+              <h3 className='my-3! font-medium text-md'>Posts</h3>
+            </button>{' '}
+            <button
+              onClick={() => setIsUserPosts(false)}
+              className={`cursor-pointer ${!isUserPosts ? 'posts-button rounded-tr-2xl rounded-br-2xl' : ''}`}
+            >
+              <h3 className='my-3! font-medium text-md'>Saved posts</h3>
+            </button>
+          </div>
+          {/* If user posts state is true then display posts made by user- */}
+          {/* -else user posts state is false display user saved posts */}
+          {isUserPosts ? (
+            user.userPosts.length ? (
+              <ul className='m-5!'>
+                {user.userPosts.map((post) => (
+                  <li key={post.id}>
+                    <PostCard
+                      firstName={user.fullUser?.firstName || 'John'}
+                      lastName={user.fullUser?.lastName || 'Doe'}
+                      email={user.fullUser?.email || 'johnDOe@gmail.com'}
+                      date={post.createdAt}
+                      content={post.postData}
+                      authorId={post.authorId}
+                      currUserId={user.fullUser?.id || 0}
+                      postId={post.id}
+                      setUserPosts={user.setUserPosts}
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className='mx-5! my-1! dark:text-neutral-300'>No posts yet</p>
+            )
+          ) : user.fullUser.savedPosts.length ? (
             <ul className='m-5!'>
-              {user.userPosts.map((post) => (
+              {user.fullUser.savedPosts.map((post) => (
                 <li key={post.id}>
                   <PostCard
                     firstName={user.fullUser?.firstName || 'John'}
@@ -60,31 +82,11 @@ export default function Profile() {
               ))}
             </ul>
           ) : (
-            <p className='mx-5! my-1! dark:text-neutral-300'>No posts yet</p>
-          )
-        ) : user.fullUser.savedPosts.length ? (
-          <ul className='m-5!'>
-            {user.fullUser.savedPosts.map((post) => (
-              <li key={post.id}>
-                <PostCard
-                  firstName={user.fullUser?.firstName || 'John'}
-                  lastName={user.fullUser?.lastName || 'Doe'}
-                  email={user.fullUser?.email || 'johnDOe@gmail.com'}
-                  date={post.createdAt}
-                  content={post.postData}
-                  authorId={post.authorId}
-                  currUserId={user.fullUser?.id || 0}
-                  postId={post.id}
-                  setUserPosts={user.setUserPosts}
-                />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className='mx-5! my-1! dark:text-neutral-300'>
-            No saved posts yet
-          </p>
-        )}
+            <p className='mx-5! my-1! dark:text-neutral-300'>
+              No saved posts yet
+            </p>
+          )}
+        </div>
       </main>
     );
 }
