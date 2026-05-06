@@ -19,20 +19,42 @@ const signupValidator = [
 // Signin validator chain
 const signinValidator = [emailValidator(false), ...signinPasswordValidator()];
 
-// Based on function input return validator for firstName or lastName from form body
-function nameValidator(isFirstName: boolean) {
-  const currentName = isFirstName ? 'First name' : 'Last name';
+// Validation chain for when user wants to update his details
+const updatePersonalDataValidator = [
+  nameValidator(true, true),
+  nameValidator(false, true),
+  passwordValidator(true),
+];
 
-  return body(isFirstName ? 'firstName' : 'lastName')
-    .trim()
-    .notEmpty()
-    .withMessage(`${currentName} ${notEmptyErr}`)
-    .bail()
-    .isAlpha()
-    .withMessage(`${currentName} ${alphaErr}`)
-    .bail()
-    .isLength({ min: 3, max: 16 })
-    .withMessage(`${currentName} ${isLengthErr}`);
+// Validation for firstName / lastName
+function nameValidator(isFirstName: boolean, canBeEmpty: boolean = false) {
+  const field = isFirstName ? 'firstName' : 'lastName';
+  const label = isFirstName ? 'First name' : 'Last name';
+
+  let validator = body(field).trim();
+
+  if (canBeEmpty) {
+    // If field is missing, null, or empty string -> skip ALL validation below
+    validator = validator.optional({ checkFalsy: true });
+  } else {
+    // Field is required -> must not be empty
+    validator = validator
+      .notEmpty()
+      .withMessage(`${label} ${notEmptyErr}`)
+      .bail();
+  }
+
+  return (
+    validator
+      // Only runs if value exists (not skipped by optional)
+      .isAlpha()
+      .withMessage(`${label} ${alphaErr}`)
+      .bail()
+
+      // Only runs if previous checks passed
+      .isLength({ min: 3, max: 16 })
+      .withMessage(`${label} ${isLengthErr}`)
+  );
 }
 
 function emailValidator(isSignupValidator: boolean) {
@@ -60,12 +82,22 @@ function emailValidator(isSignupValidator: boolean) {
     });
 }
 
-function passwordValidator() {
-  return body('password')
-    .trim()
-    .notEmpty()
-    .withMessage(`Password ${notEmptyErr}`)
-    .bail()
+function passwordValidator(canBeEmpty: boolean = false) {
+  let validator = body('password').trim();
+
+  if (canBeEmpty) {
+    // If password is missing or empty -> skip entire validation
+    validator = validator.optional({ checkFalsy: true });
+  } else {
+    // Password is required
+    validator = validator
+      .notEmpty()
+      .withMessage(`Password ${notEmptyErr}`)
+      .bail();
+  }
+
+  // Only runs when value exists (not skipped by optional)
+  return validator
     .matches(/^(?=.*[A-Z]).{6,}$/)
     .withMessage(
       'Password must be 6+ chars with at least one uppercase letter.',
@@ -117,4 +149,4 @@ function signinPasswordValidator() {
   ];
 }
 
-export { signupValidator, signinValidator };
+export { signupValidator, signinValidator, updatePersonalDataValidator };
