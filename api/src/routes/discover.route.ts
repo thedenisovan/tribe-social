@@ -4,6 +4,6 @@ import getUsers from '../controllers/get/getUsers.js';
 
 const discoverRoute = Router();
 
-discoverRoute.get('/getUsers/:page', verifyToken, getUsers);
+discoverRoute.get('/getUsers/:userId/:page', verifyToken, getUsers);
 
 export default discoverRoute;

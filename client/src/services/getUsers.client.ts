@@ -1,6 +1,9 @@
 import URL from '../constants/url';
 
-export default async function getUsers(page: string | number) {
+export default async function getUsers(
+  page: string | number,
+  userId: string | number,
+) {
   const token = localStorage.getItem('token');
 
   if (!token) {
@@ -9,7 +12,7 @@ export default async function getUsers(page: string | number) {
 
   try {
     const response = await fetch(
-      `${URL.baseURL}dashboard/discover/getUsers/${page}`,
+      `${URL.baseURL}dashboard/discover/getUsers/${userId}/${page}`,
       {
         headers: {
           'Content-Type': 'application/json',

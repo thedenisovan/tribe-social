@@ -7,13 +7,14 @@ export default async function getUsers(
   res: Response,
   next: NextFunction,
 ) {
-  const { page } = req.params;
+  const { page, userId } = req.params;
 
-  if (!page || isNaN(+page)) {
-    next(new HttpError(`No page provided.`, 400));
+  if (!page || isNaN(+page) || !userId) {
+    next(new HttpError(`No inputs provided.`, 400));
   }
 
   const intPage = Number(page);
+  const intUserId = Number(userId);
 
   if (intPage < 0) {
     next(new HttpError(`Invalid page, must be positive int.`, 400));
@@ -22,6 +23,7 @@ export default async function getUsers(
   try {
     // Get ten users based ordered by id
     const users = await prismaNeon.user.findMany({
+      where: { id: { not: intUserId } },
       orderBy: {
         id: 'asc',
       },
