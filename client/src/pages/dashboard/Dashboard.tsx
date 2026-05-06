@@ -8,11 +8,12 @@ import Sidebar from '../../components/layout/NavSidebar';
 import useDecodedData from '../../hooks/useDecodeData';
 
 export default function Dashboard() {
-  const { isLoading, error, data } = useDecodedData();
   const [currentPage, setCurrentPage] = useState<string>('Home');
   const [userPosts, setUserPosts] = useState<Post[] | []>([]);
   const [fullUser, setFullUser] = useState<null | FullUser>(null);
   const nav = useNavigate();
+
+  const { isLoading, error } = useDecodedData(setFullUser);
 
   // If error happens durning fetch navigate user to error page and sign him out
   useEffect(() => {
@@ -22,16 +23,13 @@ export default function Dashboard() {
     }
 
     const updateAfterFetch = () => {
-      if (!isLoading) {
-        setFullUser(data);
-        if (fullUser) {
-          setUserPosts(fullUser?.posts);
-        }
+      if (fullUser) {
+        setUserPosts(fullUser?.posts);
       }
     };
 
     updateAfterFetch();
-  }, [error, data, nav, isLoading, fullUser]);
+  }, [error, nav, fullUser]);
 
   if (isLoading) {
     return <div>Loading</div>;

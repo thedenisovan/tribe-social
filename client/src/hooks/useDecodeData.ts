@@ -2,7 +2,9 @@ import { useEffect } from 'react';
 import useFetch from './useFetch';
 import type { Decoded, FullUser } from '../types/auth';
 
-export default function useDecodedData() {
+export default function useDecodedData(
+  setFullUser: React.Dispatch<React.SetStateAction<FullUser | null>>,
+) {
   const {
     isLoading: loadingId,
     error: errorId,
@@ -19,8 +21,10 @@ export default function useDecodedData() {
     if (uid && dataId) {
       localStorage.setItem('exp', dataId.decoded.iat.toString());
       localStorage.setItem('uid', uid.toString());
+
+      if (data) setFullUser(data);
     }
-  }, [uid, dataId]);
+  }, [uid, dataId, data, setFullUser]);
 
   // Return first one which still is loading or first error
   return {
