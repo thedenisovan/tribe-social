@@ -12,6 +12,7 @@ export default function UpdateUserForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [e, setE] = useState<string>('');
 
   const clearInputs = () => {
     setFirstName('');
@@ -24,7 +25,7 @@ export default function UpdateUserForm() {
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className=' flex flex-col gap-4 text-gray-900 dark:text-gray-100'
+      className='flex flex-col gap-4 text-gray-900 dark:text-gray-100 h-full justify-between'
     >
       {/* Profile Section */}
       <div className='p-2 rounded-xl space-y-5'>
@@ -34,7 +35,7 @@ export default function UpdateUserForm() {
             Edit your personal information directly
           </p>
         </div>
-        <div className='grid gap-4'>
+        <div className='grid gap-5 lg:gap-8'>
           <div className='mt-5!'>
             <label className='text-sm' htmlFor='email'>
               Email
@@ -100,6 +101,7 @@ export default function UpdateUserForm() {
               Password
             </label>
             <input
+              autoComplete='off'
               type='password'
               name='password'
               id='password'
@@ -116,6 +118,7 @@ export default function UpdateUserForm() {
               Confirm password
             </label>
             <input
+              autoComplete='off'
               type='password'
               name='passwordConfirmation'
               id='passwordConfirmation'
@@ -128,12 +131,35 @@ export default function UpdateUserForm() {
           {password && confirmPassword && password !== confirmPassword && (
             <p className='text-xs text-red-500'>Passwords do not match</p>
           )}
+          <p
+            style={{
+              display:
+                e === '' || e === 'User data updated successfully'
+                  ? 'none'
+                  : 'block',
+            }}
+            className={`text-xs  text-red-500`}
+          >
+            {e}
+          </p>
+          <p
+            style={{
+              display:
+                e === '' || e !== 'User data updated successfully'
+                  ? 'none'
+                  : 'block',
+            }}
+            className='text-xs text-green-500'
+          >
+            {e}
+          </p>
         </div>
       </div>
       {/* Save */}
       <button
         onClick={async () => {
           setIsLoading(true);
+          setE('');
           // Update user profile with state data
           const result = await updateUserProfile(dashContext!.fullUser!.id, {
             firstName,
@@ -148,8 +174,10 @@ export default function UpdateUserForm() {
           // If no errors update dash context state for full user
           if (result.errors.length === 0 && result.user) {
             dashContext?.setFullUser(result.user);
+            setE('User data updated successfully');
           } else if (result.errors) {
-            console.log(result.errors);
+            // Set error
+            setE(JSON.parse(result.errors[0]).errors[0].msg);
           }
         }}
         type='button'

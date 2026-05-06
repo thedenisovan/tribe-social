@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import useSetCurrentPage from '../../../hooks/useSetCurrentPage';
+import getUsers from '../../../services/getUsers.client';
 
 export default function Discover() {
   useEffect(() => {
@@ -7,6 +8,8 @@ export default function Discover() {
   });
 
   useSetCurrentPage('Discover');
+
+  getUsers(0);
 
   return (
     <main className='m-5! main-w '>

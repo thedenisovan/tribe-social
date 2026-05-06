@@ -13,7 +13,8 @@ export default function Dashboard() {
   const [fullUser, setFullUser] = useState<null | FullUser>(null);
   const nav = useNavigate();
 
-  const { isLoading, error } = useDecodedData(setFullUser);
+  // hook that fetches initial data and sets user state based on that data
+  const { isLoading, error } = useDecodedData(setFullUser, setUserPosts);
 
   // If error happens durning fetch navigate user to error page and sign him out
   useEffect(() => {
@@ -21,15 +22,7 @@ export default function Dashboard() {
       clearLocalStorage();
       nav('/error');
     }
-
-    const updateAfterFetch = () => {
-      if (fullUser) {
-        setUserPosts(fullUser?.posts);
-      }
-    };
-
-    updateAfterFetch();
-  }, [error, nav, fullUser]);
+  }, [error, nav]);
 
   if (isLoading) {
     return <div>Loading</div>;
