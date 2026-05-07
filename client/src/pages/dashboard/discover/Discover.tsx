@@ -8,8 +8,9 @@ import useFetch from '../../../hooks/useFetch';
 export default function Discover() {
   const userId = useContext(DashContext)?.fullUser?.id;
   const [users, setUsers] = useState<DefaultUser[] | []>([]);
+  const [paginationPage, setPaginationPage] = useState<number>(0);
   const { isLoading, error, data } = useFetch<DefaultUser[]>(
-    `dashboard/discover/getUsers/${userId}/${0}`,
+    `dashboard/discover/getUsers/${userId}/${paginationPage}`,
   );
 
   useEffect(() => {
@@ -18,6 +19,11 @@ export default function Discover() {
     const updateUsers = async () => {
       if (data) {
         setUsers(data);
+      }
+
+      // If fetch did not return any more users disable pagination logic
+      if (data?.length === 0) {
+        setPaginationPage((page) => (page = page - 1));
       }
     };
 
@@ -51,6 +57,20 @@ export default function Discover() {
           {users.map((user) => (
             <UserCard key={user.id} user={user} />
           ))}
+        </div>
+        <footer className='text-center'>{paginationPage + 1}</footer>
+        <div className='flex justify-center gap-5'>
+          <button
+            onClick={() => setPaginationPage((page) => (page = page - 1))}
+            disabled={paginationPage <= 0}
+          >
+            -
+          </button>
+          <button
+            onClick={() => setPaginationPage((page) => (page = page + 1))}
+          >
+            +
+          </button>
         </div>
       </div>
     </main>
