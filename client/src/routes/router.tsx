@@ -32,7 +32,7 @@ const router = createBrowserRouter([
             Component: Settings,
           },
           {
-            path: 'profile',
+            path: 'profile/:id',
             Component: Profile,
           },
           {

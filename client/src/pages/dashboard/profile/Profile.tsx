@@ -5,25 +5,47 @@ import { LightIcon, DarkIcon } from '../../../components/common/ThemeIcons';
 import useSetCurrentPage from '../../../hooks/useSetCurrentPage';
 import type { FullUser } from '../../../types/auth';
 import PostCard from '../../../components/common/PostCard';
+import useFetch from '../../../hooks/useFetch';
+import { useParams } from 'react-router';
 
 export default function Profile() {
-  const user = useContext(DashContext);
+  const { id } = useParams();
+  const { isLoading, error, data } = useFetch<FullUser>(
+    `dashboard/profile/getUserProfile/${id}`,
+  );
+
+  // Context of current user/client
+  const currentUser = useContext(DashContext);
+
+  // State to choose between posts created by user and saved posts
   const [isUserPosts, setIsUserPosts] = useState<boolean>(true);
 
   useEffect(() => {
     document.title = 'Tribe Social | Profile';
-  });
+
+    const updateUserPosts = () => {
+      if (data) {
+        currentUser?.setUserPosts(data.posts);
+      }
+    };
+
+    updateUserPosts();
+  }, [currentUser, data]);
 
   useSetCurrentPage('Profile');
 
-  // console.log(d?.posts);
+  if (isLoading) {
+    return <h1>Loading</h1>;
+  } else if (error) {
+    return <h1>error</h1>;
+  }
 
-  if (user?.fullUser && user)
+  if (data && currentUser && currentUser.fullUser)
     return (
       <main className='main-w '>
         <div className='lg:max-w-250 lg:mx-auto!'>
           <div className='m-5! rounded-xl border border-neutral-300 dark:border-neutral-600'>
-            <ProfileHeader user={user?.fullUser} />
+            <ProfileHeader user={data} />
           </div>
           <div className='grid grid-cols-2 border m-5! border-neutral-300 dark:border-neutral-600 rounded-2xl'>
             <button
@@ -42,20 +64,20 @@ export default function Profile() {
           {/* If user posts state is true then display posts made by user- */}
           {/* -else user posts state is false display user saved posts */}
           {isUserPosts ? (
-            user.userPosts.length ? (
+            data.posts.length ? (
               <ul className='m-5!'>
-                {user.userPosts.map((post) => (
+                {data.posts.map((post) => (
                   <li key={post.id}>
                     <PostCard
-                      firstName={user.fullUser?.firstName || 'John'}
-                      lastName={user.fullUser?.lastName || 'Doe'}
-                      email={user.fullUser?.email || 'johnDOe@gmail.com'}
+                      firstName={data.firstName}
+                      lastName={data.lastName}
+                      email={data.email}
                       date={post.createdAt}
                       content={post.postData}
                       authorId={post.authorId}
-                      currUserId={user.fullUser?.id || 0}
+                      currUserId={currentUser!.fullUser!.id}
                       postId={post.id}
-                      setUserPosts={user.setUserPosts}
+                      setUserPosts={currentUser.setUserPosts}
                     />
                   </li>
                 ))}
@@ -63,20 +85,20 @@ export default function Profile() {
             ) : (
               <p className='mx-5! my-1! dark:text-neutral-300'>No posts yet</p>
             )
-          ) : user.fullUser.savedPosts.length ? (
+          ) : data.savedPosts.length ? (
             <ul className='m-5!'>
-              {user.fullUser.savedPosts.map((post) => (
+              {data.savedPosts.map((post) => (
                 <li key={post.id}>
                   <PostCard
-                    firstName={user.fullUser?.firstName || 'John'}
-                    lastName={user.fullUser?.lastName || 'Doe'}
-                    email={user.fullUser?.email || 'johnDOe@gmail.com'}
+                    firstName={data?.firstName || 'John'}
+                    lastName={data?.lastName || 'Doe'}
+                    email={data?.email || 'johnDOe@gmail.com'}
                     date={post.createdAt}
                     content={post.postData}
                     authorId={post.authorId}
-                    currUserId={user.fullUser?.id || 0}
+                    currUserId={data?.id || 0}
                     postId={post.id}
-                    setUserPosts={user.setUserPosts}
+                    setUserPosts={currentUser.setUserPosts}
                   />
                 </li>
               ))}
@@ -110,8 +132,6 @@ function ProfileHeader({ user }: { user: FullUser }) {
 }
 
 function ProfileSubHeader({ user }: { user: FullUser }) {
-  const userPosts = useContext(DashContext)?.userPosts;
-
   return (
     <section className='mt-10! flex flex-col gap-2 pl-6 pb-4'>
       <div className='flex gap-2 font-medium'>
@@ -124,7 +144,7 @@ function ProfileSubHeader({ user }: { user: FullUser }) {
       <p className={`pt-2 text-sm ${user.bio ? '' : 'hidden'}`}>{user.bio}</p>
       <ul className='flex gap-3'>
         <li className='flex gap-1 items-center'>
-          <p className='font-bold'>{userPosts?.length}</p>
+          <p className='font-bold'>{user.posts?.length}</p>
           <p className='text-sm'>Posts</p>
         </li>
         <li className='flex gap-1 items-center'>

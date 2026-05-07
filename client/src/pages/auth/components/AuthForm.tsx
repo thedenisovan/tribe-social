@@ -5,7 +5,13 @@ import formValidator from '../../../utils/formValidator.client';
 import userAuth from '../../../services/userAuth.client';
 import initialFormData from '../../../constants/initialData';
 
-export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
+export default function AuthForm({
+  isSignupPage,
+  setIsSignupPage,
+}: {
+  isSignupPage: boolean;
+  setIsSignupPage: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const authContext = useContext(AuthContext);
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const navigate = useNavigate();
@@ -34,6 +40,8 @@ export default function AuthForm({ isSignupPage }: { isSignupPage: boolean }) {
         ...initialFormData,
         [signupResult.errors[0].path]: signupResult.errors[0].msg,
       });
+    } else {
+      setIsSignupPage(false);
     }
 
     setIsAuthLoading(false);

@@ -16,7 +16,7 @@ export interface DefaultUser {
   lastName: string;
   email: string;
   bio?: string;
-  password: string;
+  hashedPassword: string;
   registeredAt?: string;
   avatarUrl?: string;
   isOnline: boolean;

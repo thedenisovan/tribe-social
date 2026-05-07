@@ -9,7 +9,7 @@ export default function PostCard({
   email,
   date,
   content,
-  profileUrl,
+  avatarUrl,
   authorId,
   currUserId,
   postId,
@@ -20,7 +20,7 @@ export default function PostCard({
   email: string;
   date: string;
   content: string;
-  profileUrl?: string;
+  avatarUrl?: string;
   authorId: number;
   currUserId: number;
   postId: number;
@@ -32,8 +32,8 @@ export default function PostCard({
         <header className='flex justify-between'>
           <div className='flex gap-1 items-center'>
             <aside>
-              {profileUrl ? (
-                profileUrl
+              {avatarUrl ? (
+                avatarUrl
               ) : (
                 <div className='flex md:h-10 md:w-10 items-center justify-center bg-linear-to-br from-purple-500 to-pink-500 p-1 rounded-full '>
                   <p className='text-sm text-white'>

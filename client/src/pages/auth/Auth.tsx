@@ -62,7 +62,10 @@ export default function Auth() {
                 setIsSignupPage={setIsSignupPage}
                 isSignupPage={isSignupPage}
               />
-              <AuthForm isSignupPage={isSignupPage} />
+              <AuthForm
+                setIsSignupPage={setIsSignupPage}
+                isSignupPage={isSignupPage}
+              />
               <AuthFooter />
             </main>
           </aside>
