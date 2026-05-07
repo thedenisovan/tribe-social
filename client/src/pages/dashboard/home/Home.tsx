@@ -29,10 +29,8 @@ export default function Home() {
           <button
             onClick={async () => {
               if (dashContext && dashContext.fullUser) {
-                // Create new post and add it to dash context of user posts
-                const post = await newPost(postData, dashContext.fullUser.id);
-
-                dashContext.setUserPosts((posts) => [...posts, post]);
+                // Create new post
+                await newPost(postData, dashContext.fullUser.id);
               }
             }}
           >

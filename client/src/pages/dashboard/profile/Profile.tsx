@@ -3,34 +3,36 @@ import { useContext } from 'react';
 import DashContext from '../../../context/DashContext';
 import { LightIcon, DarkIcon } from '../../../components/common/ThemeIcons';
 import useSetCurrentPage from '../../../hooks/useSetCurrentPage';
-import type { FullUser } from '../../../types/auth';
+import type { FullUser, Post } from '../../../types/auth';
 import PostCard from '../../../components/common/PostCard';
 import useFetch from '../../../hooks/useFetch';
 import { useParams } from 'react-router';
 
 export default function Profile() {
+  // Id of current profile open in profile page
   const { id } = useParams();
+  // Fetch user data based on users id
   const { isLoading, error, data } = useFetch<FullUser>(
     `dashboard/profile/getUserProfile/${id}`,
   );
-
-  // Context of current user/client
-  const currentUser = useContext(DashContext);
-
-  // State to choose between posts created by user and saved posts
+  const [userPosts, setUserPosts] = useState<Post[] | []>([]);
+  // State to toggle between posts created by user and saved posts
   const [isUserPosts, setIsUserPosts] = useState<boolean>(true);
+
+  // Context of signed in user/client
+  const currentUser = useContext(DashContext);
 
   useEffect(() => {
     document.title = 'Tribe Social | Profile';
 
-    const updateUserPosts = () => {
+    const updateActiveUserPosts = () => {
       if (data) {
-        currentUser?.setUserPosts(data.posts);
+        setUserPosts(data.posts);
       }
     };
 
-    updateUserPosts();
-  }, [currentUser, data]);
+    updateActiveUserPosts();
+  }, [data]);
 
   useSetCurrentPage('Profile');
 
@@ -40,7 +42,7 @@ export default function Profile() {
     return <h1>error</h1>;
   }
 
-  if (data && currentUser && currentUser.fullUser)
+  if (data && currentUser)
     return (
       <main className='main-w '>
         <div className='lg:max-w-250 lg:mx-auto!'>
@@ -64,9 +66,9 @@ export default function Profile() {
           {/* If user posts state is true then display posts made by user- */}
           {/* -else user posts state is false display user saved posts */}
           {isUserPosts ? (
-            data.posts.length ? (
+            userPosts.length ? (
               <ul className='m-5!'>
-                {data.posts.map((post) => (
+                {userPosts.map((post) => (
                   <li key={post.id}>
                     <PostCard
                       firstName={data.firstName}
@@ -77,7 +79,7 @@ export default function Profile() {
                       authorId={post.authorId}
                       currUserId={currentUser!.fullUser!.id}
                       postId={post.id}
-                      setUserPosts={currentUser.setUserPosts}
+                      setUserPosts={setUserPosts}
                     />
                   </li>
                 ))}
@@ -98,7 +100,7 @@ export default function Profile() {
                     authorId={post.authorId}
                     currUserId={data?.id || 0}
                     postId={post.id}
-                    setUserPosts={currentUser.setUserPosts}
+                    setUserPosts={setUserPosts}
                   />
                 </li>
               ))}

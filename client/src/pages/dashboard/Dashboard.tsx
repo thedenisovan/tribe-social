@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router';
 import Header from '../../components/layout/Header';
 import { useNavigate } from 'react-router';
-import type { FullUser, Post } from '../../types/auth';
+import type { FullUser } from '../../types/auth';
 import DashContext, { CurrentPageContext } from '../../context/DashContext';
 import { useEffect, useState } from 'react';
 import Sidebar from '../../components/layout/NavSidebar';
@@ -9,12 +9,11 @@ import useDecodedData from '../../hooks/useDecodeData';
 
 export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState<string>('Home');
-  const [userPosts, setUserPosts] = useState<Post[] | []>([]);
   const [fullUser, setFullUser] = useState<null | FullUser>(null);
   const nav = useNavigate();
 
   // hook that fetches initial data and sets user state based on that data
-  const { isLoading, error } = useDecodedData(setFullUser, setUserPosts);
+  const { isLoading, error } = useDecodedData(setFullUser);
 
   // If error happens durning fetch navigate user to error page and sign him out
   useEffect(() => {
@@ -40,8 +39,6 @@ export default function Dashboard() {
       <DashContext
         value={{
           fullUser,
-          userPosts,
-          setUserPosts,
           setFullUser,
         }}
       >

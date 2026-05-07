@@ -22,7 +22,6 @@ export default function UserCard({ user }: { user: DefaultUser }) {
         </div>
         <div>
           <header className='flex gap-1 font-bold'>
-            <p>{user.id}</p>
             <p>{user.firstName}</p>
             <p>{user.lastName}</p>
           </header>
