@@ -15,6 +15,13 @@ export default function Profile() {
   const { isLoading, error, data } = useFetch<FullUser>(
     `dashboard/profile/getUserProfile/${id}`,
   );
+  // Fetch user posts based on users id
+  const {
+    isLoading: postLoad,
+    error: postErr,
+    data: postData,
+  } = useFetch<Post[]>(`dashboard/profile/getUserPosts/${id}`);
+  // State of all posts made by user
   const [userPosts, setUserPosts] = useState<Post[] | []>([]);
   // State to toggle between posts created by user and saved posts
   const [isUserPosts, setIsUserPosts] = useState<boolean>(true);
@@ -25,20 +32,21 @@ export default function Profile() {
   useEffect(() => {
     document.title = 'Tribe Social | Profile';
 
+    // after posts made by user are fetched set them to post state
     const updateActiveUserPosts = () => {
-      if (data) {
-        setUserPosts(data.posts);
+      if (postData) {
+        setUserPosts(postData);
       }
     };
 
     updateActiveUserPosts();
-  }, [data]);
+  }, [postData]);
 
   useSetCurrentPage('Profile');
 
-  if (isLoading) {
+  if (isLoading || postLoad) {
     return <h1>Loading</h1>;
-  } else if (error) {
+  } else if (error || postErr) {
     return <h1>error</h1>;
   }
 

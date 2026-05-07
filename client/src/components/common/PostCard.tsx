@@ -2,6 +2,7 @@ import { isToday, differenceInDays, differenceInYears } from 'date-fns';
 import ICONS from '../../constants/icons';
 import deletePost from '../../services/deletePost.client';
 import type { Post } from '../../types/auth';
+import likePost from '../../services/likePost.client';
 
 export default function PostCard({
   firstName,
@@ -80,6 +81,19 @@ export default function PostCard({
         </header>
 
         <p className='mt-5!'>{content}</p>
+
+        <footer className='flex gap-2'>
+          <button
+            onClick={() => {
+              likePost(postId, currUserId);
+            }}
+            className='border rounded-2xl p-2'
+          >
+            like
+          </button>
+          <button className='border rounded-2xl p-2'>comment</button>
+          <button className='border rounded-2xl p-2'>save</button>
+        </footer>
       </main>
     </div>
   );

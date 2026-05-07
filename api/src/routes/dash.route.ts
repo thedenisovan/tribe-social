@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import { verifyToken } from '../middleware/jwt.js';
-import type User from '../types/user.js';
-import { HttpError } from '../middleware/errorMiddleware.js';
-import prismaNeon from '../db/prisma.js';
 import deletePost from '../controllers/delete/deletePost.js';
+import likePost from '../controllers/put/likePost.js';
+import type User from '../types/user.js';
 
 const dashRoute = Router();
 
@@ -23,5 +22,6 @@ dashRoute.get('/getUserId', verifyToken, (req, res, next) => {
 });
 
 dashRoute.post('/deletePost', verifyToken, deletePost);
+dashRoute.put('/likePost', verifyToken, likePost);
 
 export default dashRoute;

@@ -25,9 +25,10 @@ export default async function getUserPosts(
       );
     }
 
-    // Create new post
+    // Get all posts created by user
     const posts = await prismaNeon.post.findMany({
       where: { authorId: authorIntId },
+      include: { likes: true, saved: true, comments: true, hashtags: true },
     });
 
     return res.status(201).json(posts);
@@ -59,7 +60,7 @@ export async function getUserProfileData(
       );
     }
 
-    // Create new post
+    // Get all data of given user
     const userData = await prismaNeon.user.findUnique({
       where: { id: intUserId },
       include: {
