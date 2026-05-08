@@ -2,41 +2,6 @@ import prismaNeon from '../../db/prisma.js';
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from '../../middleware/errorMiddleware.js';
 
-export default async function getUserPosts(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  try {
-    const { authorId } = req.params;
-
-    if (!authorId) {
-      return next(new HttpError(`No author id provided.`, 400));
-    }
-
-    const authorIntId = Number(authorId);
-
-    if (!authorIntId || isNaN(authorIntId)) {
-      return next(
-        new HttpError(
-          `No or incorrect values were provided for request body.`,
-          400,
-        ),
-      );
-    }
-
-    // Get all posts created by user
-    const posts = await prismaNeon.post.findMany({
-      where: { authorId: authorIntId },
-      include: { likes: true, saved: true, comments: true, hashtags: true },
-    });
-
-    return res.status(201).json(posts);
-  } catch (e) {
-    next(e);
-  }
-}
-
 export async function getPost(req: Request, res: Response, next: NextFunction) {
   try {
     const { postId } = req.params;
@@ -95,8 +60,26 @@ export async function getUserProfileData(
     const userData = await prismaNeon.user.findUnique({
       where: { id: intUserId },
       include: {
-        posts: true,
-        savedPosts: true,
+        posts: {
+          include: {
+            likes: true,
+            saved: true,
+            comments: true,
+            hashtags: true,
+          },
+        },
+        savedPosts: {
+          include: {
+            post: {
+              include: {
+                likes: true,
+                saved: true,
+                comments: true,
+                hashtags: true,
+              },
+            },
+          },
+        },
         follower: true,
         following: true,
         requester: true,
