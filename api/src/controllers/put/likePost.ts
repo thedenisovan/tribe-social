@@ -49,8 +49,12 @@ export default async function likePost(
       where: { id: intPostId },
       include: { comments: true, hashtags: true, likes: true, saved: true },
     });
+    const updatedPosts = await prismaNeon.post.findMany({
+      where: { authorId: intUserId },
+      include: { comments: true, hashtags: true, likes: true, saved: true },
+    });
 
-    return res.status(200).json({ msg, updatedPost });
+    return res.status(200).json({ msg, updatedPost, updatedPosts });
   } catch (e) {
     next(e);
   }

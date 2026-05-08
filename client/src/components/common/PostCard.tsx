@@ -93,7 +93,9 @@ export default function PostCard({
               // Send like request to server and return updated post
               const res = await likePost(postData.id, currUserId);
 
+              // Update current post and all given user posts after like has been pressed
               setPost(res.updatedPost);
+              setUserPosts(res.updatedPosts);
               setIsLikeLoading(false);
             }}
             className={`border flex rounded-2xl p-2 ${isPostLiked ? 'bg-red-500' : ''}`}
