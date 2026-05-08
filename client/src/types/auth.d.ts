@@ -35,6 +35,7 @@ export interface Post {
   id: number;
   postData: string;
   postMediaUrl: string | null;
+  likes: LikeOnPost[];
 }
 
 export interface SavedPost {

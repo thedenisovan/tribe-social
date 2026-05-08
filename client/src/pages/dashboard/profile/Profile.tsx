@@ -79,15 +79,10 @@ export default function Profile() {
                 {userPosts.map((post) => (
                   <li key={post.id}>
                     <PostCard
-                      firstName={data.firstName}
-                      lastName={data.lastName}
-                      email={data.email}
-                      date={post.createdAt}
-                      content={post.postData}
-                      authorId={post.authorId}
-                      currUserId={currentUser!.fullUser!.id}
-                      postId={post.id}
+                      userData={data}
+                      currUserId={currentUser.fullUser!.id}
                       setUserPosts={setUserPosts}
+                      postData={post}
                     />
                   </li>
                 ))}
@@ -100,15 +95,10 @@ export default function Profile() {
               {data.savedPosts.map((post) => (
                 <li key={post.id}>
                   <PostCard
-                    firstName={data?.firstName || 'John'}
-                    lastName={data?.lastName || 'Doe'}
-                    email={data?.email || 'johnDOe@gmail.com'}
-                    date={post.createdAt}
-                    content={post.postData}
-                    authorId={post.authorId}
-                    currUserId={data?.id || 0}
-                    postId={post.id}
+                    userData={data}
+                    currUserId={data.id}
                     setUserPosts={setUserPosts}
+                    postData={post}
                   />
                 </li>
               ))}
@@ -154,7 +144,7 @@ function ProfileSubHeader({ user }: { user: FullUser }) {
       <p className={`pt-2 text-sm ${user.bio ? '' : 'hidden'}`}>{user.bio}</p>
       <ul className='flex gap-3'>
         <li className='flex gap-1 items-center'>
-          <p className='font-bold'>{user.posts?.length}</p>
+          <p className='font-bold'>{user.posts.length}</p>
           <p className='text-sm'>Posts</p>
         </li>
         <li className='flex gap-1 items-center'>
