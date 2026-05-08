@@ -4,6 +4,7 @@ import deletePost from '../../services/deletePost.client';
 import type { FullUser, Post } from '../../types/auth';
 import likePost from '../../services/likePost.client';
 import { useState } from 'react';
+import { LoadingSvg } from '../../pages/auth/components/AuthForm';
 
 export default function PostCard({
   userData,
@@ -17,6 +18,7 @@ export default function PostCard({
   postData: Post;
 }) {
   const [post, setPost] = useState<Post>(postData);
+  const [isLikeLoading, setIsLikeLoading] = useState<boolean>(false);
 
   // Based on if users id in like array update style of like button
   const isPostLiked = post?.likes.find((obj) => obj.userId === currUserId);
@@ -81,6 +83,8 @@ export default function PostCard({
           <button
             id={`b-${postData.id}`}
             onClick={async () => {
+              setIsLikeLoading(true);
+
               // Update button's style on click
               document
                 .querySelector(`#b-${postData.id}`)
@@ -88,12 +92,13 @@ export default function PostCard({
 
               // Send like request to server and return updated post
               const res = await likePost(postData.id, currUserId);
+
               setPost(res.updatedPost);
+              setIsLikeLoading(false);
             }}
-            className={`border rounded-2xl p-2 ${isPostLiked ? 'bg-red-500' : ''}`}
+            className={`border flex rounded-2xl p-2 ${isPostLiked ? 'bg-red-500' : ''}`}
           >
-            like
-            {post?.likes.length}
+            Likes {!isLikeLoading ? post?.likes.length : <LoadingSvg />}
           </button>
           <button className='border rounded-2xl p-2'>comment</button>
           <button className='border rounded-2xl p-2'>save</button>

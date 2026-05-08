@@ -15,14 +15,10 @@ export default function Profile() {
   const { isLoading, error, data } = useFetch<FullUser>(
     `dashboard/profile/getUserProfile/${id}`,
   );
-  // Fetch user posts based on users id
-  const {
-    isLoading: postLoad,
-    error: postErr,
-    data: postData,
-  } = useFetch<Post[]>(`dashboard/profile/getUserPosts/${id}`);
+
   // State of all posts made by user
   const [userPosts, setUserPosts] = useState<Post[] | []>([]);
+  const [savedPosts, setSavedPosts] = useState<Post[] | []>([]);
   // State to toggle between posts created by user and saved posts
   const [isUserPosts, setIsUserPosts] = useState<boolean>(true);
 
@@ -34,19 +30,20 @@ export default function Profile() {
 
     // after posts made by user are fetched set them to post state
     const updateActiveUserPosts = () => {
-      if (postData) {
-        setUserPosts(postData);
+      if (data) {
+        setUserPosts(data.posts);
+        setSavedPosts(data.savedPosts);
       }
     };
 
     updateActiveUserPosts();
-  }, [postData]);
+  }, [data]);
 
   useSetCurrentPage('Profile');
 
-  if (isLoading || postLoad) {
+  if (isLoading) {
     return <h1>Loading</h1>;
-  } else if (error || postErr) {
+  } else if (error) {
     return <h1>error</h1>;
   }
 
@@ -90,9 +87,9 @@ export default function Profile() {
             ) : (
               <p className='mx-5! my-1! dark:text-neutral-300'>No posts yet</p>
             )
-          ) : data.savedPosts.length ? (
+          ) : savedPosts.length ? (
             <ul className='m-5!'>
-              {data.savedPosts.map((post) => (
+              {savedPosts.map((post) => (
                 <li key={post.id}>
                   <PostCard
                     userData={data}
