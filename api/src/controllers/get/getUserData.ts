@@ -37,6 +37,37 @@ export default async function getUserPosts(
   }
 }
 
+export async function getPost(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { postId } = req.params;
+
+    if (!postId) {
+      return next(new HttpError(`No post id provided.`, 400));
+    }
+
+    const postIntId = Number(postId);
+
+    if (isNaN(postIntId)) {
+      return next(
+        new HttpError(
+          `No or incorrect values were provided for request body.`,
+          400,
+        ),
+      );
+    }
+
+    // Get single post
+    const posts = await prismaNeon.post.findUnique({
+      where: { id: postIntId },
+      include: { likes: true, saved: true, comments: true, hashtags: true },
+    });
+
+    return res.status(201).json(posts);
+  } catch (e) {
+    next(e);
+  }
+}
+
 export async function getUserProfileData(
   req: Request,
   res: Response,

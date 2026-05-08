@@ -22,6 +22,8 @@ export default async function likePost(
 
   try {
     // Find like of given user on given post
+    let msg = '';
+
     const like = await prismaNeon.likeOnPost.findFirst({
       where: { postId: intPostId, userId: intUserId },
     });
@@ -32,7 +34,7 @@ export default async function likePost(
         where: { postId: like.postId, userId: intUserId },
       });
 
-      return res.status(200).json({ msg: 'disliked' });
+      msg = 'disliked';
 
       // If no like create it
     } else {
@@ -40,8 +42,15 @@ export default async function likePost(
         data: { userId: intUserId, postId: intPostId },
       });
 
-      return res.status(200).json({ msg: 'liked' });
+      msg = 'liked';
     }
+
+    const updatedPost = await prismaNeon.post.findUnique({
+      where: { id: intPostId },
+      include: { comments: true, hashtags: true, likes: true, saved: true },
+    });
+
+    return res.status(200).json({ msg, updatedPost });
   } catch (e) {
     next(e);
   }
