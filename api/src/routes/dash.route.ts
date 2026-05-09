@@ -4,6 +4,8 @@ import deletePost from '../controllers/delete/deletePost.js';
 import likePost from '../controllers/put/likePost.js';
 import type User from '../types/user.js';
 import { getPost } from '../controllers/get/getUserData.js';
+import newComment from '../controllers/post/newComment.js';
+import { savePost } from '../controllers/post/newPost.js';
 
 const dashRoute = Router();
 
@@ -24,6 +26,8 @@ dashRoute.get('/getUserId', verifyToken, (req, res, next) => {
 dashRoute.get('/getPost/:postId', verifyToken, getPost);
 
 dashRoute.post('/deletePost', verifyToken, deletePost);
+dashRoute.post('/newComment', verifyToken, newComment);
+dashRoute.post('/savePost', verifyToken, savePost);
 
 dashRoute.put('/likePost', verifyToken, likePost);
 

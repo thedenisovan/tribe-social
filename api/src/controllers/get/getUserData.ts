@@ -69,13 +69,21 @@ export async function getUserProfileData(
           },
         },
         savedPosts: {
-          include: {
+          select: {
             post: {
               include: {
                 likes: true,
                 saved: true,
                 comments: true,
                 hashtags: true,
+                author: {
+                  select: {
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                    avatarUrl: true,
+                  },
+                },
               },
             },
           },

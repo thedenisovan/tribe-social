@@ -30,12 +30,15 @@ export interface FullUser extends DefaultUser {
 }
 
 export interface Post {
+  [x: string]: Post;
   authorId: number;
   createdAt: string;
   id: number;
   postData: string;
   postMediaUrl: string | null;
   likes: LikeOnPost[];
+  comments: Comment[];
+  saved: SavedPost[];
 }
 
 export interface SavedPost {

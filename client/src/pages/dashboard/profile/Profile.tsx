@@ -31,8 +31,11 @@ export default function Profile() {
     // after posts made by user are fetched set them to post state
     const updateActiveUserPosts = () => {
       if (data) {
+        // Normalize saved post array by extracting only values of post it self
+        const normalizedSavedPosts = data.savedPosts.map((sp) => sp.post);
+
         setUserPosts(data.posts);
-        setSavedPosts(data.savedPosts);
+        setSavedPosts(normalizedSavedPosts);
       }
     };
 
@@ -80,6 +83,8 @@ export default function Profile() {
                       currUserId={currentUser.fullUser!.id}
                       setUserPosts={setUserPosts}
                       postData={post}
+                      isUserPosts={true}
+                      setSavedPosts={setSavedPosts}
                     />
                   </li>
                 ))}
@@ -92,10 +97,12 @@ export default function Profile() {
               {savedPosts.map((post) => (
                 <li key={post.id}>
                   <PostCard
-                    userData={data}
+                    userData={post.author}
                     currUserId={data.id}
                     setUserPosts={setUserPosts}
                     postData={post}
+                    isUserPosts={false}
+                    setSavedPosts={setSavedPosts}
                   />
                 </li>
               ))}

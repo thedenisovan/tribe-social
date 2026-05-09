@@ -1,75 +1,148 @@
 import { isToday, differenceInDays, differenceInYears } from 'date-fns';
-import ICONS from '../../constants/icons';
+import { useState, useContext } from 'react';
+
 import deletePost from '../../services/deletePost.client';
-import type { FullUser, Post } from '../../types/auth';
+import savePost from '../../services/savePost.client';
+import newComment from '../../services/newComment.client';
 import likePost from '../../services/likePost.client';
-import { useState } from 'react';
+
+import type { Comment, FullUser, Post, SavedPost } from '../../types/auth';
+
 import { LoadingSvg } from '../../pages/auth/components/AuthForm';
+
+import ICONS from '../../constants/icons';
+import DashContext from '../../context/DashContext';
+
+type PostCardProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  userData: FullUser | any;
+  currUserId: number;
+  postData: Post;
+  isUserPosts: boolean;
+
+  setUserPosts: React.Dispatch<React.SetStateAction<Post[]>>;
+  setSavedPosts: React.Dispatch<React.SetStateAction<Post[]>>;
+};
 
 export default function PostCard({
   userData,
   currUserId,
-  setUserPosts,
   postData,
-}: {
-  userData: FullUser;
-  currUserId: number;
-  setUserPosts: React.Dispatch<React.SetStateAction<Post[] | []>>;
-  postData: Post;
-}) {
-  const [post, setPost] = useState<Post>(postData);
-  const [isLikeLoading, setIsLikeLoading] = useState<boolean>(false);
+  isUserPosts,
+  setUserPosts,
+  setSavedPosts,
+}: PostCardProps) {
+  // Id of signed in user
+  const uid = useContext(DashContext)?.fullUser?.id;
 
-  // Based on if users id in like array update style of like button
-  const isPostLiked = post?.likes.find((obj) => obj.userId === currUserId);
+  const [post, setPost] = useState(postData);
+
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
+
+  const isPostLiked = post.likes.some((like) => like.userId === currUserId);
+
+  const isPostSaved = post.saved.some(
+    (saved) => saved.savedById === currUserId,
+  );
+
+  // Only author can delete his posts
+  const canDelete = post.authorId === currUserId;
+
+  // Only user can save/unsave posts to his profile
+  const canSave = uid === currUserId && currUserId !== post.authorId;
+
+  async function handleDeletePost() {
+    const posts = await deletePost(post.id, post.authorId);
+
+    setUserPosts(posts);
+  }
+
+  async function handleLikePost() {
+    setIsLikeLoading(true);
+
+    const res = await likePost(post.id, currUserId);
+
+    const updatedPost = res.updatedPosts.find((p: Post) => p.id === post.id);
+
+    if (!updatedPost) return;
+
+    setPost(updatedPost);
+
+    if (isUserPosts) {
+      setUserPosts(res.updatedPosts);
+    } else {
+      const normalizedPosts = res.savedPosts.map(
+        (saved: SavedPost) => saved.post,
+      );
+
+      setSavedPosts(normalizedPosts);
+    }
+
+    setIsLikeLoading(false);
+  }
+
+  async function handleSavePost() {
+    const updatedPost = await savePost(post.id, currUserId);
+
+    setPost(updatedPost);
+  }
+
   return (
-    <div className='border dark:bg-neutral-600/20 dark:border-neutral-600 border-neutral-300 p-3 my-4!  rounded-xl'>
+    <div className='border border-neutral-300 dark:border-neutral-600 dark:bg-neutral-600/20 rounded-xl p-3 my-4!'>
       <main>
         <header className='flex justify-between'>
-          <div className='flex gap-1 items-center'>
+          <div className='flex items-center gap-1'>
             <aside>
               {userData.avatarUrl ? (
                 userData.avatarUrl
               ) : (
-                <div className='flex md:h-10 md:w-10 items-center justify-center bg-linear-to-br from-purple-500 to-pink-500 p-1 rounded-full '>
+                <div className='flex items-center justify-center md:h-10 md:w-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 p-1'>
                   <p className='text-sm text-white'>
                     {userData.firstName[0].toUpperCase()}
                   </p>
+
                   <p className='text-sm text-white'>
                     {userData.lastName[0].toUpperCase()}
                   </p>
                 </div>
               )}
             </aside>
+
             <div>
               <h2 className='flex gap-1'>
                 <span className='font-medium'>{userData.firstName}</span>
+
                 <span className='font-medium'>{userData.lastName}</span>
               </h2>
-              <div className='flex gap-1 items-center flex-wrap'>
+
+              <div className='flex items-center gap-1 flex-wrap'>
                 <p className='text-[13px] dark:text-neutral-300'>
                   @{userData.email}
                 </p>
+
                 {'•'}
+
                 <p className='text-[13px] dark:text-neutral-300'>
-                  {formatPostDate(postData.createdAt)}
+                  {formatPostDate(post.createdAt)}
                 </p>
               </div>
             </div>
           </div>
-          <button
-            onClick={async () => {
-              const posts = await deletePost(postData.id, postData.authorId);
 
-              setUserPosts(posts);
-            }}
-            className={`${postData.authorId === currUserId ? '' : 'hidden'} transition-colors cursor-pointer hover:bg-red-500/50 rounded-full h-7 w-7 flex items-center justify-center`}
+          <button
+            onClick={handleDeletePost}
+            className={`
+              h-7 w-7 rounded-full flex items-center justify-center
+              transition-colors cursor-pointer hover:bg-red-500/50
+              ${canDelete ? '' : 'hidden'}
+            `}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
               height='24px'
-              viewBox='0 -960 960 960'
               width='24px'
+              viewBox='0 -960 960 960'
               fill='#999999'
             >
               <path d={ICONS.delete} />
@@ -77,49 +150,130 @@ export default function PostCard({
           </button>
         </header>
 
-        <p className='mt-5!'>{postData.postData}</p>
+        <p className='mt-5!'>{post.postData}</p>
 
         <footer className='flex gap-2'>
-          <button
-            id={`b-${postData.id}`}
-            onClick={async () => {
-              setIsLikeLoading(true);
+          <div className='flex gap-2'>
+            <button
+              id={`b-${post.id}`}
+              onClick={handleLikePost}
+              className={`
+                border rounded-2xl p-2 flex
+                ${isPostLiked ? 'bg-red-500' : ''}
+              `}
+            >
+              Likes {!isLikeLoading ? post.likes.length : <LoadingSvg />}
+            </button>
 
-              // Update button's style on click
-              document
-                .querySelector(`#b-${postData.id}`)
-                ?.classList.toggle('bg-red-500');
+            <button
+              onClick={() => setIsCommentOpen((prev) => !prev)}
+              className='border rounded-2xl p-2'
+            >
+              comments {post.comments.length}
+            </button>
 
-              // Send like request to server and return updated post
-              const res = await likePost(postData.id, currUserId);
+            <button
+              onClick={handleSavePost}
+              className={`
+                border rounded-2xl p-2
+                ${canSave ? '' : 'hidden'}
+                ${isPostSaved ? 'bg-blue-500' : ''}
+              `}
+            >
+              save
+            </button>
+          </div>
 
-              // Update current post and all given user posts after like has been pressed
-              setPost(res.updatedPost);
-              setUserPosts(res.updatedPosts);
-              setIsLikeLoading(false);
-            }}
-            className={`border flex rounded-2xl p-2 ${isPostLiked ? 'bg-red-500' : ''}`}
-          >
-            Likes {!isLikeLoading ? post?.likes.length : <LoadingSvg />}
-          </button>
-          <button className='border rounded-2xl p-2'>comment</button>
-          <button className='border rounded-2xl p-2'>save</button>
+          <CommentDropDown
+            isCommentOpen={isCommentOpen}
+            comments={post.comments}
+            userId={currUserId}
+            postId={post.id}
+            setPost={setPost}
+            setUserPosts={setUserPosts}
+          />
         </footer>
       </main>
     </div>
   );
 }
 
-// Display how old is post
+type CommentDropDownProps = {
+  isCommentOpen: boolean;
+  comments: Comment[];
+  userId: number;
+  postId: number;
+
+  setPost: React.Dispatch<React.SetStateAction<Post>>;
+  setUserPosts: React.Dispatch<React.SetStateAction<Post[]>>;
+};
+
+function CommentDropDown({
+  isCommentOpen,
+  comments,
+  userId,
+  postId,
+  setPost,
+  setUserPosts,
+}: CommentDropDownProps) {
+  const [comment, setComment] = useState('');
+
+  async function handleNewComment() {
+    const updatedPosts = await newComment(comment, postId, userId);
+
+    const updatedPost = updatedPosts.find((post: Post) => post.id === postId);
+
+    if (!updatedPost) return;
+
+    setPost(updatedPost);
+    setUserPosts(updatedPosts);
+  }
+
+  return (
+    <div
+      className='flex-col'
+      style={{ display: isCommentOpen ? 'flex' : 'none' }}
+    >
+      <form onSubmit={(e) => e.preventDefault()}>
+        <label htmlFor='comment'>Comment</label>
+
+        <input
+          id='comment'
+          name='comment'
+          type='text'
+          minLength={1}
+          maxLength={50}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          className='border'
+        />
+
+        <button onClick={handleNewComment}>Post</button>
+      </form>
+
+      <ul>
+        {comments.map((comment) => (
+          <li key={comment.commentId}>{comment.comment}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function formatPostDate(date: string | Date) {
-  const d = new Date(date);
+  const parsedDate = new Date(date);
 
-  if (isToday(d)) return 'today';
+  if (isToday(parsedDate)) {
+    return 'today';
+  }
 
-  const days = differenceInDays(new Date(), d);
+  const days = differenceInDays(new Date(), parsedDate);
 
-  if (days < 365) return `${days + 1}d`;
+  if (days < 365) {
+    return `${days + 1}d`;
+  }
 
-  const years = differenceInYears(new Date(), d);
+  const years = differenceInYears(new Date(), parsedDate);
+
   return `${years + 1}y`;
 }

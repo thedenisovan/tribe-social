@@ -7,33 +7,79 @@ export default async function newPost(
   res: Response,
   next: NextFunction,
 ) {
+  const { postData, authorId } = req.body;
+
+  const authorIntId = Number(authorId);
+
+  if (!postData || !authorIntId || isNaN(authorIntId)) {
+    return next(
+      new HttpError(
+        `No or incorrect values were provided for request body.`,
+        400,
+      ),
+    );
+  } else if (postData.trim() === '' || postData.trim().length >= 500) {
+    return next(
+      new HttpError(
+        `Post data must be between one and 500 characters long.`,
+        400,
+      ),
+    );
+  }
   try {
-    const { postData, authorId } = req.body;
-
-    const authorIntId = Number(authorId);
-
-    if (!postData || !authorIntId || isNaN(authorIntId)) {
-      return next(
-        new HttpError(
-          `No or incorrect values were provided for request body.`,
-          400,
-        ),
-      );
-    } else if (postData.trim() === '' || postData.trim().length >= 500) {
-      return next(
-        new HttpError(
-          `Post data must be between one and 500 characters long.`,
-          400,
-        ),
-      );
-    }
-
     // Create new post
     const newPost = await prismaNeon.post.create({
       data: { postData: postData.trim(), authorId: authorIntId },
     });
 
     return res.status(201).json(newPost);
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function savePost(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const { postId, userId } = req.body;
+
+  const intUserId = Number(userId);
+  const intPostId = Number(postId);
+
+  if (!intPostId || !userId || isNaN(intUserId) || isNaN(intPostId)) {
+    return next(
+      new HttpError(
+        `No or incorrect values were provided for request body.`,
+        400,
+      ),
+    );
+  }
+
+  try {
+    // Look if post is already saved by user
+    const savedPost = await prismaNeon.savedPost.findFirst({
+      where: { postId: intPostId, savedById: intUserId },
+    });
+
+    // If post is not saved save it, by creating new savedPost row
+    if (!savedPost) {
+      await prismaNeon.savedPost.create({
+        data: { savedById: intUserId, postId: intPostId },
+      });
+    } else {
+      await prismaNeon.savedPost.deleteMany({
+        where: { savedById: intUserId, postId: intPostId },
+      });
+    }
+
+    const savedPosts = await prismaNeon.post.findUnique({
+      where: { id: intPostId },
+      include: { comments: true, hashtags: true, likes: true, saved: true },
+    });
+
+    return res.status(201).json(savedPosts);
   } catch (e) {
     next(e);
   }
