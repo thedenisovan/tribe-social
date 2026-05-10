@@ -81,6 +81,6 @@ export async function savePost(
 
     return res.status(201).json(savedPosts);
   } catch (e) {
-    next(e);
+    return next(e);
   }
 }

@@ -30,6 +30,12 @@ export default async function getUsers(
       // Start page 0 so skip 0 and return first 10
       skip: intPage * 10,
       take: 10,
+      include: {
+        receiver: true,
+        requester: true,
+        follower: true,
+        following: true,
+      },
     });
 
     return res.status(200).json(users);

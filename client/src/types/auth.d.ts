@@ -27,6 +27,8 @@ export interface FullUser extends DefaultUser {
   follower: User[];
   following: User[];
   savedPosts: PostData[];
+  receiver: User[];
+  requester: User[];
 }
 
 export interface Post {

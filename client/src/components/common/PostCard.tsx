@@ -183,16 +183,15 @@ export default function PostCard({
               save
             </button>
           </div>
-
-          <CommentDropDown
-            isCommentOpen={isCommentOpen}
-            comments={post.comments}
-            userId={currUserId}
-            postId={post.id}
-            setPost={setPost}
-            setUserPosts={setUserPosts}
-          />
         </footer>
+        <CommentDropDown
+          isCommentOpen={isCommentOpen}
+          comments={post.comments}
+          userId={currUserId}
+          postId={post.id}
+          setPost={setPost}
+          setUserPosts={setUserPosts}
+        />
       </main>
     </div>
   );
@@ -232,7 +231,7 @@ function CommentDropDown({
   return (
     <div
       className='flex-col'
-      style={{ display: isCommentOpen ? 'flex' : 'none' }}
+      style={{ display: isCommentOpen ? 'flex ' : 'none' }}
     >
       <form onSubmit={(e) => e.preventDefault()}>
         <label htmlFor='comment'>Comment</label>

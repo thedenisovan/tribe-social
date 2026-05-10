@@ -152,11 +152,11 @@ function ProfileSubHeader({ user }: { user: FullUser }) {
           <p className='text-sm'>Posts</p>
         </li>
         <li className='flex gap-1 items-center'>
-          <p className='font-bold'>{user.follower.length}</p>
+          <p className='font-bold'>{user.following.length}</p>
           <p className='text-sm'>Followers</p>
         </li>
         <li className='flex gap-1 items-center'>
-          <p className='font-bold'>{user.following.length}</p>
+          <p className='font-bold'>{user.follower.length}</p>
           <p className='text-sm'>Following</p>
         </li>
       </ul>

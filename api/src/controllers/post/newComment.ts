@@ -51,6 +51,6 @@ export default async function newComment(
     });
     return res.status(201).json(updatedPosts);
   } catch (e) {
-    next(e);
+    return next(e);
   }
 }
