@@ -64,10 +64,13 @@ export default function Discover() {
           <button
             onClick={() => setPaginationPage((page) => (page = page - 1))}
             disabled={paginationPage <= 0}
+            className={`${paginationPage <= 0 ? 'hidden' : ''}`}
           >
             -
           </button>
           <button
+            className={`${users.length < 10 ? 'hidden' : ''}`}
+            disabled={users.length < 10}
             onClick={() => setPaginationPage((page) => (page = page + 1))}
           >
             +

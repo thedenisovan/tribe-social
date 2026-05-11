@@ -33,6 +33,55 @@ export async function getPost(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+// Get data of all users who have sent follow request to curr auth user
+export async function getFollowRequesters(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return next(new HttpError(`No user id provided.`, 400));
+    }
+
+    const intUserId = Number(userId);
+
+    if (!intUserId || isNaN(intUserId)) {
+      return next(
+        new HttpError(
+          `No or incorrect values were provided for request body.`,
+          400,
+        ),
+      );
+    }
+
+    // Get full data of given user
+    const userData = await prismaNeon.user.findUnique({
+      where: { id: intUserId },
+      include: fullUserData,
+    });
+
+    // Array of users who have sent follow request to given user
+    let followRequesters;
+
+    if (userData?.receiver.length) {
+      followRequesters = await prismaNeon.user.findMany({
+        where: {
+          id: {
+            in: userData?.receiver.map((r) => r.requesterId),
+          },
+        },
+      });
+    }
+
+    return res.status(201).json(followRequesters);
+  } catch (e) {
+    next(e);
+  }
+}
+
 export async function getUserProfileData(
   req: Request,
   res: Response,
@@ -59,43 +108,7 @@ export async function getUserProfileData(
     // Get all data of given user
     const userData = await prismaNeon.user.findUnique({
       where: { id: intUserId },
-      include: {
-        posts: {
-          include: {
-            likes: true,
-            saved: true,
-            comments: true,
-            hashtags: true,
-          },
-        },
-        savedPosts: {
-          select: {
-            post: {
-              include: {
-                likes: true,
-                saved: true,
-                comments: true,
-                hashtags: true,
-                author: {
-                  select: {
-                    firstName: true,
-                    lastName: true,
-                    email: true,
-                    avatarUrl: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        follower: true,
-        following: true,
-        requester: true,
-        receiver: true,
-        likedComments: true,
-        likedPosts: true,
-        comments: true,
-      },
+      include: fullUserData,
     });
 
     return res.status(201).json(userData);
@@ -103,3 +116,41 @@ export async function getUserProfileData(
     next(e);
   }
 }
+
+const fullUserData = {
+  posts: {
+    include: {
+      likes: true,
+      saved: true,
+      comments: true,
+      hashtags: true,
+    },
+  },
+  savedPosts: {
+    select: {
+      post: {
+        include: {
+          likes: true,
+          saved: true,
+          comments: true,
+          hashtags: true,
+          author: {
+            select: {
+              firstName: true,
+              lastName: true,
+              email: true,
+              avatarUrl: true,
+            },
+          },
+        },
+      },
+    },
+  },
+  follower: true,
+  following: true,
+  requester: true,
+  receiver: true,
+  likedComments: true,
+  likedPosts: true,
+  comments: true,
+};

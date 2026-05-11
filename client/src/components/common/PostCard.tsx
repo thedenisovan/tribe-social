@@ -1,5 +1,6 @@
 import { isToday, differenceInDays, differenceInYears } from 'date-fns';
 import { useState, useContext } from 'react';
+import { Link } from 'react-router';
 
 import deletePost from '../../services/deletePost.client';
 import savePost from '../../services/savePost.client';
@@ -92,43 +93,45 @@ export default function PostCard({
     <div className='border border-neutral-300 dark:border-neutral-600 dark:bg-neutral-600/20 rounded-xl p-3 my-4!'>
       <main>
         <header className='flex justify-between'>
-          <div className='flex items-center gap-1'>
-            <aside>
-              {userData.avatarUrl ? (
-                userData.avatarUrl
-              ) : (
-                <div className='flex items-center justify-center md:h-10 md:w-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 p-1'>
-                  <p className='text-sm text-white'>
-                    {userData.firstName[0].toUpperCase()}
+          <Link to={`/dashboard/profile/${post.authorId}`}>
+            <div className='flex items-center gap-1'>
+              <aside>
+                {userData.avatarUrl ? (
+                  userData.avatarUrl
+                ) : (
+                  <div className='flex items-center justify-center md:h-10 md:w-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 p-1'>
+                    <p className='text-sm text-white'>
+                      {userData.firstName[0].toUpperCase()}
+                    </p>
+
+                    <p className='text-sm text-white'>
+                      {userData.lastName[0].toUpperCase()}
+                    </p>
+                  </div>
+                )}
+              </aside>
+
+              <div>
+                <h2 className='flex gap-1'>
+                  <span className='font-medium'>{userData.firstName}</span>
+
+                  <span className='font-medium'>{userData.lastName}</span>
+                </h2>
+
+                <div className='flex items-center gap-1 flex-wrap'>
+                  <p className='text-[13px] dark:text-neutral-300'>
+                    @{userData.email}
                   </p>
 
-                  <p className='text-sm text-white'>
-                    {userData.lastName[0].toUpperCase()}
+                  {'•'}
+
+                  <p className='text-[13px] dark:text-neutral-300'>
+                    {formatPostDate(post.createdAt)}
                   </p>
                 </div>
-              )}
-            </aside>
-
-            <div>
-              <h2 className='flex gap-1'>
-                <span className='font-medium'>{userData.firstName}</span>
-
-                <span className='font-medium'>{userData.lastName}</span>
-              </h2>
-
-              <div className='flex items-center gap-1 flex-wrap'>
-                <p className='text-[13px] dark:text-neutral-300'>
-                  @{userData.email}
-                </p>
-
-                {'•'}
-
-                <p className='text-[13px] dark:text-neutral-300'>
-                  {formatPostDate(post.createdAt)}
-                </p>
               </div>
             </div>
-          </div>
+          </Link>
 
           <button
             onClick={handleDeletePost}
