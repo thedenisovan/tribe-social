@@ -7,14 +7,14 @@ export default async function getUsers(
   res: Response,
   next: NextFunction,
 ) {
-  const { page, userId } = req.params;
+  const { page } = req.params;
 
-  if (!page || isNaN(+page) || !userId) {
+  if (!page || isNaN(+page)) {
     next(new HttpError(`No inputs provided.`, 400));
   }
 
   const intPage = Number(page);
-  const intUserId = Number(userId);
+  const intUserId = Number(req.userId);
 
   if (intPage < 0) {
     next(new HttpError(`Invalid page, must be positive int.`, 400));

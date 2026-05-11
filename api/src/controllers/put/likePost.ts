@@ -7,14 +7,14 @@ export default async function likePost(
   res: Response,
   next: NextFunction,
 ) {
-  const { postId, userId } = req.body;
+  const { postId } = req.body;
 
-  if (!postId || !userId) {
+  if (!postId) {
     next(new HttpError('Post id and user id must be provided', 400));
   }
 
   const intPostId = +postId;
-  const intUserId = +userId;
+  const intUserId = req.userId;
 
   if (isNaN(intPostId) || isNaN(intUserId)) {
     next(new HttpError('Post id or user id isNaN', 400));

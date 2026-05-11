@@ -1,14 +1,11 @@
 import URL from '../constants/url';
 
-export async function updateUserProfile(
-  userId: number,
-  data: {
-    firstName?: string;
-    lastName?: string;
-    bio?: string;
-    password?: string;
-  },
-) {
+export async function updateUserProfile(data: {
+  firstName?: string;
+  lastName?: string;
+  bio?: string;
+  password?: string;
+}) {
   const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('Could not extract token from local storage.');
@@ -23,7 +20,7 @@ export async function updateUserProfile(
           'Content-Type': 'application/json',
           authorization: 'Bearer ' + token,
         },
-        body: JSON.stringify({ userId, ...data }),
+        body: JSON.stringify(data),
       },
     );
 

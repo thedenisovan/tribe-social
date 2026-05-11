@@ -2,7 +2,6 @@ import URL from '../constants/url';
 
 export default async function acceptFollowRequest(
   senderId: number,
-  receiverId: number,
   isAccepted: boolean,
 ) {
   const token = localStorage.getItem('token');
@@ -20,7 +19,7 @@ export default async function acceptFollowRequest(
           'Content-Type': 'application/json',
           authorization: 'Bearer ' + token,
         },
-        body: JSON.stringify({ senderId, receiverId, isAccepted }),
+        body: JSON.stringify({ senderId, isAccepted }),
       },
     );
 

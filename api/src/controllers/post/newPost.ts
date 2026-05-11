@@ -7,9 +7,9 @@ export default async function newPost(
   res: Response,
   next: NextFunction,
 ) {
-  const { postData, authorId } = req.body;
+  const { postData } = req.body;
 
-  const authorIntId = Number(authorId);
+  const authorIntId = Number(req.userId);
 
   if (!postData || !authorIntId || isNaN(authorIntId)) {
     return next(
@@ -43,12 +43,12 @@ export async function savePost(
   res: Response,
   next: NextFunction,
 ) {
-  const { postId, userId } = req.body;
+  const { postId } = req.body;
 
-  const intUserId = Number(userId);
+  const intUserId = Number(req.userId);
   const intPostId = Number(postId);
 
-  if (!intPostId || !userId || isNaN(intUserId) || isNaN(intPostId)) {
+  if (!intPostId || isNaN(intUserId) || isNaN(intPostId)) {
     return next(
       new HttpError(
         `No or incorrect values were provided for request body.`,

@@ -40,13 +40,7 @@ export async function getFollowRequesters(
   next: NextFunction,
 ) {
   try {
-    const { userId } = req.params;
-
-    if (!userId) {
-      return next(new HttpError(`No user id provided.`, 400));
-    }
-
-    const intUserId = Number(userId);
+    const intUserId = Number(req.userId);
 
     if (!intUserId || isNaN(intUserId)) {
       return next(
@@ -91,7 +85,7 @@ export async function getUserProfileData(
     const { userId } = req.params;
 
     if (!userId) {
-      return next(new HttpError(`No author id provided.`, 400));
+      return next(new HttpError(`No user id provided.`, 400));
     }
 
     const intUserId = Number(userId);

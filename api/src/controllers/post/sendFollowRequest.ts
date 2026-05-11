@@ -7,13 +7,13 @@ export default async function sendFollowRequest(
   res: Response,
   next: NextFunction,
 ) {
-  const { senderId, receiverId } = req.body;
+  const { receiverId } = req.body;
 
-  if (!senderId || !receiverId) {
+  if (!receiverId) {
     return next(new HttpError('No sender id or receiver id provided.', 400));
   }
 
-  const intSenderId = Number(senderId);
+  const intSenderId = Number(req.userId);
   const intReceiverId = Number(receiverId);
 
   if (isNaN(intSenderId) || isNaN(intReceiverId)) {

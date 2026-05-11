@@ -7,13 +7,13 @@ export default async function deletePost(
   res: Response,
   next: NextFunction,
 ) {
-  const { postId, authorId } = req.body;
-  if (!postId || !authorId) {
+  const { postId } = req.body;
+  if (!postId) {
     return next(new HttpError('No post id provided', 400));
   }
 
   const intPostId = Number(postId);
-  const intAuthorId = Number(authorId);
+  const intAuthorId = Number(req.userId);
 
   if (isNaN(intPostId)) {
     return next(new HttpError('Post id is NaN', 400));

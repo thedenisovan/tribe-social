@@ -42,7 +42,9 @@ export function verifyToken(
 
       // Attach decoded user data to request object
       req.user = decoded;
+      req.userId = decoded.user;
       // Pass control to next middleware/handler
+
       next();
     });
   } else {

@@ -161,7 +161,7 @@ export default function UpdateUserForm() {
           setIsLoading(true);
           setE('');
           // Update user profile with state data
-          const result = await updateUserProfile(dashContext!.fullUser!.id, {
+          const result = await updateUserProfile({
             firstName,
             lastName,
             bio,

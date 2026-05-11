@@ -1,12 +1,8 @@
 import URL from '../constants/url';
 
-export default async function newComment(
-  comment: string,
-  postId: number,
-  authorId: number,
-) {
+export default async function newComment(comment: string, postId: number) {
   // Validate input data
-  if (!authorId || !comment || !postId || isNaN(authorId) || isNaN(postId)) {
+  if (!comment || !postId || isNaN(postId)) {
     throw new Error('No user id or post data provided.');
   }
   const sanitizedPost = comment.trim();
@@ -30,7 +26,7 @@ export default async function newComment(
         'Content-Type': 'application/json',
         authorization: 'Bearer ' + token,
       },
-      body: JSON.stringify({ postId, authorId, comment }),
+      body: JSON.stringify({ postId, comment }),
     });
 
     if (!response.ok) {

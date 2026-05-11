@@ -16,7 +16,7 @@
     "declaration": false,
     "removeComments": true
   },
-  "include": ["src/**/*", "tests"],
+  "include": ["src/**/*", "tests", "types"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"],
   "ts-node": {
     "esm": true

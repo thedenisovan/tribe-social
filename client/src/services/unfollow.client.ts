@@ -1,6 +1,6 @@
 import URL from '../constants/url';
 
-export default async function unfollow(follower: number, following: number) {
+export default async function unfollow(following: number) {
   const token = localStorage.getItem('token');
 
   if (!token) {
@@ -14,7 +14,7 @@ export default async function unfollow(follower: number, following: number) {
         'Content-Type': 'application/json',
         authorization: 'Bearer ' + token,
       },
-      body: JSON.stringify({ follower, following }),
+      body: JSON.stringify({ following }),
     });
 
     if (!response.ok) {

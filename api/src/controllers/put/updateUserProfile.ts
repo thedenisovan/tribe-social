@@ -8,17 +8,15 @@ export default async function updateUserDetails(
   res: Response,
   next: NextFunction,
 ) {
-  const { firstName, lastName, bio, password, userId } = req.body;
+  const { firstName, lastName, bio, password } = req.body;
 
-  if (!userId && isNaN(userId)) {
-    next(new HttpError('User id must be number.', 400));
-  } else if (!firstName && !lastName && !bio && !password) {
+  if (!firstName && !lastName && !bio && !password) {
     next(new HttpError('At least one input field must be provided.', 400));
   } else if (bio && bio.length > 200) {
     next(new HttpError('Bio must be no longer than 200 characters', 400));
   }
 
-  const intUserId = Number(userId);
+  const intUserId = Number(req.userId);
 
   try {
     let user = await prismaNeon.user.findUnique({

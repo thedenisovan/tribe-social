@@ -54,7 +54,7 @@ export default function PostCard({
   const canSave = uid === currUserId && currUserId !== post.authorId;
 
   async function handleDeletePost() {
-    const posts = await deletePost(post.id, post.authorId);
+    const posts = await deletePost(post.id);
 
     setUserPosts(posts);
   }
@@ -62,7 +62,7 @@ export default function PostCard({
   async function handleLikePost() {
     setIsLikeLoading(true);
 
-    const res = await likePost(post.id, currUserId);
+    const res = await likePost(post.id);
 
     const updatedPost = res.updatedPosts.find((p: Post) => p.id === post.id);
 
@@ -84,7 +84,7 @@ export default function PostCard({
   }
 
   async function handleSavePost() {
-    const updatedPost = await savePost(post.id, currUserId);
+    const updatedPost = await savePost(post.id);
 
     setPost(updatedPost);
   }
@@ -213,7 +213,6 @@ type CommentDropDownProps = {
 function CommentDropDown({
   isCommentOpen,
   comments,
-  userId,
   postId,
   setPost,
   setUserPosts,
@@ -221,7 +220,7 @@ function CommentDropDown({
   const [comment, setComment] = useState('');
 
   async function handleNewComment() {
-    const updatedPosts = await newComment(comment, postId, userId);
+    const updatedPosts = await newComment(comment, postId);
 
     const updatedPost = updatedPosts.find((post: Post) => post.id === postId);
 

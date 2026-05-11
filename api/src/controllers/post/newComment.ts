@@ -8,9 +8,9 @@ export default async function newComment(
   next: NextFunction,
 ) {
   try {
-    const { postId, authorId, comment } = req.body;
+    const { postId, comment } = req.body;
 
-    const intAuthorId = Number(authorId);
+    const intAuthorId = Number(req.userId);
     const intPostId = Number(postId);
 
     if (

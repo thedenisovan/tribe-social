@@ -71,7 +71,7 @@ function FollowButton({ user }: { user: FullUser }) {
         <button
           onClick={() => {
             if (currUser?.fullUser) {
-              sendFollowRequest(authUserId, user.id);
+              sendFollowRequest(user.id);
             }
           }}
           className={`border px-2 rounded-2xl ${isCurrentUserFollowing || haveReceivedFollowRequest ? 'hidden' : ''}`}
@@ -84,7 +84,7 @@ function FollowButton({ user }: { user: FullUser }) {
         <button
           onClick={() => {
             if (currUser?.fullUser) {
-              acceptFollowRequest(user.id, authUserId, false);
+              acceptFollowRequest(user.id, false);
             }
           }}
           className={`border px-2 rounded-2xl ${haveReceivedFollowRequest ? '' : 'hidden'}`}
@@ -96,7 +96,7 @@ function FollowButton({ user }: { user: FullUser }) {
         <button
           onClick={() => {
             if (currUser?.fullUser) {
-              acceptFollowRequest(user.id, authUserId, true);
+              acceptFollowRequest(user.id, true);
             }
           }}
           className={`border px-2 rounded-2xl ${haveReceivedFollowRequest ? '' : 'hidden'}`}
@@ -108,7 +108,7 @@ function FollowButton({ user }: { user: FullUser }) {
         <button
           onClick={() => {
             if (currUser?.fullUser) {
-              unfollow(authUserId, user.id);
+              unfollow(user.id);
             }
           }}
           className={`border px-2 rounded-2xl ${!isCurrentUserFollowing || haveReceivedFollowRequest ? 'hidden' : ''}`}

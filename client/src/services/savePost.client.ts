@@ -1,6 +1,6 @@
 import URL from '../constants/url';
 
-export default async function savePost(postId: number, userId: number) {
+export default async function savePost(postId: number) {
   const token = localStorage.getItem('token');
 
   if (!token) {
@@ -14,7 +14,7 @@ export default async function savePost(postId: number, userId: number) {
         'Content-Type': 'application/json',
         authorization: 'Bearer ' + token,
       },
-      body: JSON.stringify({ postId, userId }),
+      body: JSON.stringify({ postId }),
     });
 
     if (!response.ok) {

@@ -24,9 +24,15 @@ export default function Notifications() {
         {!user?.fullUser?.receiver.length && (
           <h2>No incoming follow requests</h2>
         )}
-        {data.map((d) => (
-          <div key={d.id}>{d.email}</div>
-        ))}
+        <ul>
+          {data.map((d) => (
+            <li key={d.id}>
+              <p>
+                {d.firstName} {d.lastName} has sent you follow request
+              </p>
+            </li>
+          ))}
+        </ul>
       </main>
     );
 }

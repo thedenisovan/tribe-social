@@ -1,7 +1,7 @@
 import URL from '../constants/url';
 
-export default async function deletePost(postId: number, authorId: number) {
-  if (!postId || !authorId) {
+export default async function deletePost(postId: number) {
+  if (!postId) {
     throw new Error('Post id and author id must be provided.');
   }
 
@@ -18,7 +18,7 @@ export default async function deletePost(postId: number, authorId: number) {
         'Content-Type': 'application/json',
         authorization: 'Bearer ' + token,
       },
-      body: JSON.stringify({ postId, authorId }),
+      body: JSON.stringify({ postId }),
     });
 
     if (!response.ok) {

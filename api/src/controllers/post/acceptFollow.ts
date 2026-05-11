@@ -7,14 +7,14 @@ export default async function acceptFollow(
   res: Response,
   next: NextFunction,
 ) {
-  const { senderId, receiverId, isAccepted } = req.body;
+  const { senderId, isAccepted } = req.body;
 
-  if (!senderId || !receiverId) {
+  if (!senderId) {
     return next(new HttpError('No sender id or receiver id provided.', 400));
   }
 
   const intSenderId = Number(senderId);
-  const intReceiverId = Number(receiverId);
+  const intReceiverId = Number(req.userId);
 
   if (isNaN(intSenderId) || isNaN(intReceiverId)) {
     return next(

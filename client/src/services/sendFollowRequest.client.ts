@@ -1,9 +1,6 @@
 import URL from '../constants/url';
 
-export default async function sendFollowRequest(
-  senderId: number,
-  receiverId: number,
-) {
+export default async function sendFollowRequest(receiverId: number) {
   const token = localStorage.getItem('token');
 
   if (!token) {
@@ -19,7 +16,7 @@ export default async function sendFollowRequest(
           'Content-Type': 'application/json',
           authorization: 'Bearer ' + token,
         },
-        body: JSON.stringify({ senderId, receiverId }),
+        body: JSON.stringify({ receiverId }),
       },
     );
 

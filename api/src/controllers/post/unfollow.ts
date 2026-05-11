@@ -7,13 +7,13 @@ export default async function unfollow(
   res: Response,
   next: NextFunction,
 ) {
-  const { follower, following } = req.body;
+  const { following } = req.body;
 
-  if (!follower || !following) {
+  if (!following) {
     next(new HttpError('Provide follower and following ids', 400));
   }
 
-  const intFollowerId = Number(follower);
+  const intFollowerId = Number(req.userId);
   const intFollowingId = Number(following);
 
   if (isNaN(intFollowerId) || isNaN(intFollowingId)) {

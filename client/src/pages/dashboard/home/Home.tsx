@@ -1,11 +1,9 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSetCurrentPage from '../../../hooks/useSetCurrentPage';
 import newPost from '../../../services/newPost.client';
-import DashContext from '../../../context/DashContext';
 
 export default function Home() {
   const [postData, setPostData] = useState<string>('');
-  const dashContext = useContext(DashContext);
 
   useEffect(() => {
     document.title = 'Tribe Social | Home';
@@ -28,10 +26,8 @@ export default function Home() {
           ></textarea>
           <button
             onClick={async () => {
-              if (dashContext && dashContext.fullUser) {
-                // Create new post
-                await newPost(postData, dashContext.fullUser.id);
-              }
+              // Create new post
+              await newPost(postData);
             }}
           >
             send

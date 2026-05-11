@@ -1,8 +1,8 @@
 import URL from '../constants/url';
 
-export default async function newPost(postData: string, authorId: number) {
+export default async function newPost(postData: string) {
   // Validate input data
-  if (!authorId || !postData || isNaN(authorId)) {
+  if (!postData) {
     throw new Error('No user id or post data provided.');
   }
   const sanitizedPost = postData.trim();
@@ -26,7 +26,7 @@ export default async function newPost(postData: string, authorId: number) {
         'Content-Type': 'application/json',
         authorization: 'Bearer ' + token,
       },
-      body: JSON.stringify({ authorId, postData }),
+      body: JSON.stringify({ postData }),
     });
 
     if (!response.ok) {
