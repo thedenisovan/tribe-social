@@ -23,6 +23,9 @@ export default async function sendFollowRequest(
   }
 
   try {
+    // Get ten users based ordered by id
+    let users;
+
     // Check if follow request exists
     const request = await prismaNeon.followRequest.findFirst({
       where: { receiverId: intReceiverId, requesterId: intSenderId },
@@ -34,16 +37,41 @@ export default async function sendFollowRequest(
         where: { receiverId: intReceiverId, requesterId: intSenderId },
       });
 
-      return res.status(200).json({ msg: 'follow request deleted.' });
+      users = await prismaUserSearch(intSenderId);
+
+      return res.status(200).json({ msg: 'follow request deleted.', users });
       // Create follow request
     } else {
       await prismaNeon.followRequest.create({
         data: { receiverId: intReceiverId, requesterId: intSenderId },
       });
 
-      return res.status(200).json({ msg: 'follow request sent.' });
+      users = await prismaUserSearch(intSenderId);
+
+      return res.status(200).json({ msg: 'follow request sent.', users });
     }
   } catch (e) {
     return next(e);
   }
 }
+
+// Prisma query to get 10 users based on current page of the pagination
+export async function prismaUserSearch(id: number) {
+  return await prismaNeon.user.findMany({
+    where: { id: { not: id } },
+    orderBy: {
+      id: 'asc',
+    },
+    // Start page 0 so skip 0 and return first 10
+    skip: 0 * 10,
+    take: 10,
+    include: prismaSearch,
+  });
+}
+
+export const prismaSearch = {
+  receiver: true,
+  requester: true,
+  follower: true,
+  following: true,
+};

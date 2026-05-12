@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from '../../middleware/errorMiddleware.js';
 import prismaNeon from '../../db/prisma.js';
+import { prismaUserSearch } from './sendFollowRequest.js';
 
 export default async function unfollow(
   req: Request,
@@ -30,7 +31,9 @@ export default async function unfollow(
         where: { followerId: intFollowerId, followingId: intFollowingId },
       });
 
-      return res.status(200).json({ msg: 'unfollowed' });
+      const users = await prismaUserSearch(intFollowerId);
+
+      return res.status(200).json({ msg: 'unfollowed', users });
     }
 
     return res.status(501).json({ msg: 'not implemented' });

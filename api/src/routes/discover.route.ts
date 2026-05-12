@@ -8,12 +8,8 @@ import { getFollowRequesters } from '../controllers/get/getUserData.js';
 
 const discoverRoute = Router();
 
-discoverRoute.get('/getUsers/:userId/:page', verifyToken, getUsers);
-discoverRoute.get(
-  '/getFollowRequesters/:userId',
-  verifyToken,
-  getFollowRequesters,
-);
+discoverRoute.get('/getUsers/:page', verifyToken, getUsers);
+discoverRoute.get('/getFollowRequesters', verifyToken, getFollowRequesters);
 
 discoverRoute.post('/sendFollowRequest', verifyToken, sendFollowRequest);
 discoverRoute.post('/acceptFollowRequest', verifyToken, acceptFollow);

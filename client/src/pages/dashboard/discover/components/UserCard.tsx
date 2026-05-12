@@ -7,7 +7,13 @@ import DashContext from '../../../../context/DashContext';
 import type { FullUser } from '../../../../types/auth';
 import unfollow from '../../../../services/unfollow.client';
 
-export default function UserCard({ user }: { user: FullUser }) {
+export default function UserCard({
+  user,
+  setUsers,
+}: {
+  user: FullUser;
+  setUsers: React.Dispatch<React.SetStateAction<FullUser[]>>;
+}) {
   return (
     <div className='flex flex-col  hover:-translate-y-1 transition-transform border rounded-2xl border-neutral-300 dark:border-neutral-700 gap-4 px-3 py-5 overflow-auto'>
       <div className='flex gap-1'>
@@ -42,12 +48,18 @@ export default function UserCard({ user }: { user: FullUser }) {
         </div>
       </div>
 
-      <FollowButton user={user} />
+      <FollowButton setUsers={setUsers} user={user} />
     </div>
   );
 }
 
-function FollowButton({ user }: { user: FullUser }) {
+function FollowButton({
+  user,
+  setUsers,
+}: {
+  user: FullUser;
+  setUsers: React.Dispatch<React.SetStateAction<FullUser[]>>;
+}) {
   const currUser = useContext(DashContext);
   const authUserId = currUser?.fullUser?.id;
 
@@ -69,9 +81,11 @@ function FollowButton({ user }: { user: FullUser }) {
       <div className={` grid grid-cols-2 gap-2`}>
         {/* Button to send follow request */}
         <button
-          onClick={() => {
+          onClick={async () => {
             if (currUser?.fullUser) {
-              sendFollowRequest(user.id);
+              const res = await sendFollowRequest(user.id);
+
+              setUsers(res.users);
             }
           }}
           className={`border px-2 rounded-2xl ${isCurrentUserFollowing || haveReceivedFollowRequest ? 'hidden' : ''}`}
@@ -82,9 +96,11 @@ function FollowButton({ user }: { user: FullUser }) {
 
         {/* Decline follow */}
         <button
-          onClick={() => {
+          onClick={async () => {
             if (currUser?.fullUser) {
-              acceptFollowRequest(user.id, false);
+              const res = await acceptFollowRequest(user.id, false);
+
+              setUsers(res.users);
             }
           }}
           className={`border px-2 rounded-2xl ${haveReceivedFollowRequest ? '' : 'hidden'}`}
@@ -94,9 +110,11 @@ function FollowButton({ user }: { user: FullUser }) {
 
         {/* Accept follow */}
         <button
-          onClick={() => {
+          onClick={async () => {
             if (currUser?.fullUser) {
-              acceptFollowRequest(user.id, true);
+              const res = await acceptFollowRequest(user.id, true);
+
+              setUsers(res.users);
             }
           }}
           className={`border px-2 rounded-2xl ${haveReceivedFollowRequest ? '' : 'hidden'}`}
@@ -106,9 +124,11 @@ function FollowButton({ user }: { user: FullUser }) {
 
         {/* Button to unfollow */}
         <button
-          onClick={() => {
+          onClick={async () => {
             if (currUser?.fullUser) {
-              unfollow(user.id);
+              const res = await unfollow(user.id);
+
+              setUsers(res.users);
             }
           }}
           className={`border px-2 rounded-2xl ${!isCurrentUserFollowing || haveReceivedFollowRequest ? 'hidden' : ''}`}

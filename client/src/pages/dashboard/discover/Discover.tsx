@@ -1,17 +1,15 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useFetch from '../../../hooks/useFetch';
 import useSetCurrentPage from '../../../hooks/useSetCurrentPage';
 
-import DashContext from '../../../context/DashContext';
 import UserCard from './components/UserCard';
 import type { FullUser } from '../../../types/auth';
 
 export default function Discover() {
-  const userId = useContext(DashContext)?.fullUser?.id;
   const [users, setUsers] = useState<FullUser[] | []>([]);
   const [paginationPage, setPaginationPage] = useState<number>(0);
   const { isLoading, error, data } = useFetch<FullUser[]>(
-    `dashboard/discover/getUsers/${userId}/${paginationPage}`,
+    `dashboard/discover/getUsers/${paginationPage}`,
   );
 
   useEffect(() => {
@@ -29,7 +27,7 @@ export default function Discover() {
     };
 
     updateUsers();
-  }, [userId, data]);
+  }, [data]);
 
   useSetCurrentPage('Discover');
 
@@ -56,7 +54,7 @@ export default function Discover() {
         </header>
         <div className='grid lg:grid-cols-2 gap-4'>
           {users.map((user) => (
-            <UserCard key={user.id} user={user} />
+            <UserCard setUsers={setUsers} key={user.id} user={user} />
           ))}
         </div>
         <footer className='text-center'>{paginationPage + 1}</footer>

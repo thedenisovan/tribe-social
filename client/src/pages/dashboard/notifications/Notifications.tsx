@@ -7,7 +7,7 @@ import type { DefaultUser } from '../../../types/auth';
 export default function Notifications() {
   const user = useContext(DashContext);
   const { isLoading, error, data } = useFetch<DefaultUser[]>(
-    `dashboard/discover/getFollowRequesters/${user?.fullUser?.id}`,
+    `dashboard/discover/getFollowRequesters`,
   );
 
   useEffect(() => {

@@ -23,7 +23,7 @@ export default async function unfollow(following: number) {
 
     const result = await response.json();
 
-    console.log(result);
+    return result;
   } catch (e) {
     throw new Error(`Server e ${e}`);
   }

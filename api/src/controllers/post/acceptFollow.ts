@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from '../../middleware/errorMiddleware.js';
 import prismaNeon from '../../db/prisma.js';
+import { prismaUserSearch } from './sendFollowRequest.js';
 
 export default async function acceptFollow(
   req: Request,
@@ -23,6 +24,8 @@ export default async function acceptFollow(
   }
 
   try {
+    let users;
+
     // Check if follow request exists
     const request = await prismaNeon.followRequest.findFirst({
       where: { receiverId: intReceiverId, requesterId: intSenderId },
@@ -40,7 +43,9 @@ export default async function acceptFollow(
         data: { followerId: intSenderId, followingId: intReceiverId },
       });
 
-      return res.status(200).json({ msg: 'follow request accepted.' });
+      users = await prismaUserSearch(intReceiverId);
+
+      return res.status(200).json({ msg: 'follow request accepted.', users });
       // If a follow request is declined:
       // 1. Remove the pending request
     } else if (request && !isAccepted) {
@@ -48,7 +53,9 @@ export default async function acceptFollow(
         where: { receiverId: intReceiverId, requesterId: intSenderId },
       });
 
-      return res.status(200).json({ msg: 'follow request declined.' });
+      users = await prismaUserSearch(intReceiverId);
+
+      return res.status(200).json({ msg: 'follow request declined.', users });
     }
 
     return res.status(501).json({ msg: 'unexpected e.' });

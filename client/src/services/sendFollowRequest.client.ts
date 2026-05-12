@@ -26,7 +26,9 @@ export default async function sendFollowRequest(receiverId: number) {
       );
     }
 
-    // const result = await response.json();
+    const result = await response.json();
+
+    return result;
   } catch (e) {
     if (e instanceof Error) {
       throw new Error(`Error ${e.message}`);
