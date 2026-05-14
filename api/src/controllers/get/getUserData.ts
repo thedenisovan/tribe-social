@@ -2,6 +2,7 @@ import prismaNeon from '../../db/prisma.js';
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from '../../middleware/errorMiddleware.js';
 
+// Get single post data based on post id
 export async function getPost(req: Request, res: Response, next: NextFunction) {
   try {
     const { postId } = req.params;
@@ -140,8 +141,34 @@ const fullUserData = {
       },
     },
   },
-  follower: true,
-  following: true,
+
+  follower: {
+    include: {
+      follower: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          avatarUrl: true,
+          email: true,
+        },
+      },
+    },
+  },
+
+  following: {
+    include: {
+      following: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          avatarUrl: true,
+          email: true,
+        },
+      },
+    },
+  },
   requester: true,
   receiver: true,
   likedComments: true,
