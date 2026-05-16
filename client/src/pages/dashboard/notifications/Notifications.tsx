@@ -16,7 +16,7 @@ export default function Notifications() {
 
   useSetCurrentPage('Notifications');
 
-  if (!isLoading || !error) console.log(data);
+  if (isLoading || error) console.log('err');
 
   if (data)
     return (

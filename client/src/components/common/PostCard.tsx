@@ -21,8 +21,8 @@ type PostCardProps = {
   postData: Post;
   isUserPosts: boolean;
 
-  setUserPosts: React.Dispatch<React.SetStateAction<Post[]>>;
-  setSavedPosts: React.Dispatch<React.SetStateAction<Post[]>>;
+  setUserPosts?: React.Dispatch<React.SetStateAction<Post[]>>;
+  setSavedPosts?: React.Dispatch<React.SetStateAction<Post[]>>;
 };
 
 export default function PostCard({
@@ -56,7 +56,7 @@ export default function PostCard({
   async function handleDeletePost() {
     const posts = await deletePost(post.id);
 
-    setUserPosts(posts);
+    if (setUserPosts) setUserPosts(posts);
   }
 
   async function handleLikePost() {
@@ -70,14 +70,14 @@ export default function PostCard({
 
     setPost(updatedPost);
 
-    if (isUserPosts) {
+    if (isUserPosts && setUserPosts) {
       setUserPosts(res.updatedPosts);
     } else {
       const normalizedPosts = res.savedPosts.map(
         (saved: SavedPost) => saved.post,
       );
 
-      setSavedPosts(normalizedPosts);
+      if (setSavedPosts) setSavedPosts(normalizedPosts);
     }
 
     setIsLikeLoading(false);
@@ -207,7 +207,7 @@ type CommentDropDownProps = {
   postId: number;
 
   setPost: React.Dispatch<React.SetStateAction<Post>>;
-  setUserPosts: React.Dispatch<React.SetStateAction<Post[]>>;
+  setUserPosts?: React.Dispatch<React.SetStateAction<Post[]>>;
 };
 
 function CommentDropDown({
@@ -227,7 +227,8 @@ function CommentDropDown({
     if (!updatedPost) return;
 
     setPost(updatedPost);
-    setUserPosts(updatedPosts);
+
+    if (setUserPosts) setUserPosts(updatedPosts);
   }
 
   return (
